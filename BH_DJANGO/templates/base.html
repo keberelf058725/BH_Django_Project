@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BHC</title>
+</head>
+{% load static %}
+<img src="{% static 'logo.png' %}" alt="logo">
+<p></p>
+<h1>Welcome to Beach House Analytics!!</h1>
+<body>
+<ul>
+<li><a href="{% url 'home' %}">Home</a></li>
+<li><a href="{% url 'viv' %}">Vivitrol Count</a></li>
+</ul>
+  {% block content %}
+  replace me
+  {% endblock %}
+</body>
+</html>
