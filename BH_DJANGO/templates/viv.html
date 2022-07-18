@@ -3,9 +3,29 @@
 {% block content %}
  <h2>Vivitrol Count Analyzer</h2>
 
-<form>
+<form method="post"> {% csrf_token %}
 {{ form.as_p }}
- <input type="file" />
+    <div>
+    <p><strong><label for="file">Please choose "jdgvivirtrol" csv file</label></strong></p>
+ <input type="file" accept=".csv"/></div>
+    <p></p>
+<div>
+    <button type="submit">Analyize File</button>
 
+<p>
+    <strong>Instructions on downloding file</strong>
+    <ul>
+    <li>Go to the 2nd page of the Public Downloads in Kipu</li>
+    <li>Click the pencil on the Vivitrol report</li>
+    <li>Update date range then scroll to the bottom and click run</li>
+    <li>Click your initials in the top right and click downloads</li>
+    <li>Click download</li>
+
+
+</ul>
+
+
+</p>
+</div>
 </form>
   {% endblock %} 
