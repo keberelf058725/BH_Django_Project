@@ -1,7 +1,9 @@
  {% extends 'base.html' %}
 
 {% block content %}
- <h2>Home Page</h1>
-  <p>This will be base anylitics, census metrics, ect.</p>
+ <h2>Main Analytics</h1>
+  {% load static %}
+<embed src="{% static 'Flash Data BI.pdf' %}" width="1500" height="1000"
+ type="application/pdf">
   {% endblock %}
 

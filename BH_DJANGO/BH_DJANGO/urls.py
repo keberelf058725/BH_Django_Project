@@ -25,4 +25,5 @@ urlpatterns = [
     path('viv/', views.viv_view, name='viv'),
     path('', views.homepage_view, name='home'),
     path('admin/', admin.site.urls),
+    path('logout/', views.logout_user, name="logout"),
 ]

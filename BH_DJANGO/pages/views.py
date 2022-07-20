@@ -1,14 +1,16 @@
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib import messages
 import pandas
 import numpy
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import auth
 import datetime
 
 
-#def auth_view(request, *args, **kwargs):
-    #return render(request, "login.html", {})
+def logout_user(request):
+    auth.logout(request)
+    return redirect('login')
 
 @login_required
 def viv_help_view(request, *args, **kwargs):
