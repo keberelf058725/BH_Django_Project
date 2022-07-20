@@ -3,12 +3,20 @@ from django.shortcuts import render
 from django.contrib import messages
 import pandas
 import numpy
+from django.contrib.auth.decorators import login_required
 import datetime
 
 
+#def auth_view(request, *args, **kwargs):
+    #return render(request, "login.html", {})
+
+@login_required
+def viv_help_view(request, *args, **kwargs):
+    return render(request, "viv_help.html", {})
+@login_required
 def homepage_view(request, *args, **kwargs):
     return render(request, "home.html", {})
-
+@login_required
 def viv_view(request, *args, **kwargs):
 
 

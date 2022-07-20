@@ -10,29 +10,29 @@
 {% else %}
  <h2>Vivitrol Count Analyzer</h2>
 
-
-<form action="" method="post" enctype="multipart/form-data"> {% csrf_token %}
-    <div>
- <input type="file" name="file" id = sheet1 accept=".csv"/>
-    <label for="sheet1" class="btn btn-secondary">Please choose "jdgvivitrol" csv file</label></div>
-    <p></p>
-<div>
-    <button type="submit">Analyize File</button>
-
 <p>
-    <strong>Instructions on downloding file</strong>
+    <font size ="+1"><strong>Instructions on downloding file</strong><font>
     <ul>
-    <li>Go to the 2nd page of the Public Downloads in Kipu</li>
-    <li>Click the pencil on the Vivitrol report</li>
-    <li>Update date range then scroll to the bottom and click run</li>
+    <li>Go to the bottom of the 2nd page of the <strong>Public Reports</strong> in Kipu</li>
+    <li>Click the pencil on the <strong>Vivitrol Injections</strong> report</li>
+    <li>Update date range then scroll to the bottom and click <strong>Run Report</strong></li>
     <li>Click your initials in the top right and click downloads</li>
-    <li>Click download</li>
+    <li><strong>Click download</strong> next to the Vivitrol Injections report</li>
+    <li><a href="{% url 'viv_help' %}">Additional Help</a></li>
 
 
 </ul>
 
 
 </p>
+
+<form action="" method="post" enctype="multipart/form-data"> {% csrf_token %}
+    <div>
+ <input type="file" name="file" id = sheet1 accept=".csv"/>
+    <label for="sheet1" class="btn btn-secondary">Please choose "jdg-vivitrol" csv file</label></div>
+    <p></p>
+<div>
+    <button type="submit">Analyize File</button>
 </div>
 </form>
 {% endif %}

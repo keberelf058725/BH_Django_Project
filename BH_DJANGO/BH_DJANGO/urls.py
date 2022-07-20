@@ -15,10 +15,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.contrib.auth import views as auth_views
 
 from pages import views
 
 urlpatterns = [
+    path('viv_help/', views.viv_help_view, name='viv_help'),
+    path('accounts/login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
     path('viv/', views.viv_view, name='viv'),
     path('', views.homepage_view, name='home'),
     path('admin/', admin.site.urls),
