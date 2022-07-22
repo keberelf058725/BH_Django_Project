@@ -48,7 +48,9 @@
                         <li>
                             <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
                         </li>
+                             {% if user.is_superuser %}
                              <li><a class="dropdown-item" href="{% url 'admin:index' %}">Admin</a></li>
+                             {% endif %}
                     </ul>
                   </li>
               </ul>
