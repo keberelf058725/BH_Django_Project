@@ -19,6 +19,7 @@ def viv_help_view(request, *args, **kwargs):
 def homepage_view(request, *args, **kwargs):
     return render(request, "home.html", {})
 @login_required
+@permission_required('pages.view_nurse', raise_exception=True)
 def viv_view(request, *args, **kwargs):
 
 

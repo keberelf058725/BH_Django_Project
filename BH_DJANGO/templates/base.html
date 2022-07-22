@@ -30,9 +30,11 @@
                       <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"> Excel Analysis Tools </a>
                          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <li>
+                             {% if perms.pages.view_nurse %}
               <li class="nav-item dropdown">
               <a class="dropdown-item" aria-current="page" href="{% url 'viv' %}">Vivitrol Count</a>
             </li>
+                             {% endif %}
                              <li class="nav-item dropdown">
               <a class="dropdown-item" aria-current="page" href="#">Some Other Tool</a>
             </li>
