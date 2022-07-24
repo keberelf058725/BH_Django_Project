@@ -3,16 +3,16 @@
 {% block content %}
 {% if messages %}
 {% for message in messages %}
-    <div>
-        <strong>{{message|safe}}</strong>
-    </div>
+<div>
+    <strong>{{message|safe}}</strong>
+</div>
 {% endfor %}
 {% else %}
- <h2>Vivitrol Count Analyzer</h2>
-
+<div class="viv_css">
+    <h2>Vivitrol Count Analyzer</h2>
 <p>
-    <font size ="+1"><strong>Instructions on downloding file</strong><font>
-    <ul>
+    <font size="+1"><strong>Instructions on downloading file</strong><font>
+<ul>
     <li>Go to the bottom of the 2nd page of the <strong>Public Reports</strong> in Kipu</li>
     <li>Click the pencil on the <strong>Vivitrol Injections</strong> report</li>
     <li>Update date range then scroll to the bottom and click <strong>Run Report</strong></li>
@@ -28,12 +28,13 @@
 
 <form action="" method="post" enctype="multipart/form-data"> {% csrf_token %}
     <div>
- <input type="file" name="file" id = sheet1 accept=".csv"/>
-    <label for="sheet1" class="btn btn-secondary">Please choose "jdg-vivitrol" csv file</label></div>
+        <input type="file" name="file" id=sheet1 accept=".csv"/>
+        <label for="sheet1" class="btn btn-secondary">Please choose "jdg-vivitrol" csv file</label></div>
     <p></p>
-<div>
-    <button type="submit">Analyize File</button>
-</div>
+    <div>
+        <button type="submit">Analyze File</button>
+    </div>
 </form>
+</div>
 {% endif %}
-  {% endblock %} 
+{% endblock %}

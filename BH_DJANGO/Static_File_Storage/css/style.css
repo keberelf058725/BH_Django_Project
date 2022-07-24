@@ -1,0 +1,25 @@
+img.login_img { float: center; }
+
+p.login_text {color: red;}
+
+body.login_body {
+  margin: auto;
+  width: 640px;
+  padding: 50px;
+  font-family: 'Avenir', sans-serif;
+  color: #33475b;
+      }
+
+div.viv_css {
+  margin: auto;
+  width: 640px;
+  padding: 50px;
+  font-family: 'Avenir', sans-serif;
+  color: #33475b;
+      }
+
+h2.viv_help_css {
+margin: auto;
+  width: 50%;
+  padding: 0px;
+      }

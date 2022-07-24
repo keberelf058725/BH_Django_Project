@@ -1,23 +1,28 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}"/>
     <title>LoginSystem</title>
 </head>
 {% load static %}
-<img src="{% static 'logo.png' %}" alt="logo">
-<p></p>
-<h1>Welcome to Beach House Analytics!!</h1>
-<body>
-    <form method="post">
-        {% csrf_token %}
-        {{form.as_p}}
-        <input type="submit" value="Login"/>
+<div>
+    <img class="login_img" src="{% static 'logo.png' %}" alt="logo">
+</div>
+<div>
+    <h1>Welcome to Beach House Analytics!!</h1>
+</div>
+<body class="login_body">
+<form method="post">
+    {% csrf_token %}
+    {{form.as_p}}
+    <input type="submit" value="Login"/>
 
-    </form>
-<p>If you have been authorized to use this system and you do not have<br>
+</form>
+<p class="login_text">If you have been authorized to use this system and you do not have<br>
     login credentials please contact EHR via the Help Desk (help@beachhousecenter.com)<br>
     with Kipu in the subject line
 </p>
