@@ -5,10 +5,10 @@ import pandas
 import numpy
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.models import auth
-import datetime
+from datetime import datetime, timedelta
 from .forms import Flash_File_Form
 import json
-
+from django.templatetags.static import static
 
 def logout_user(request):
     auth.logout(request)
@@ -22,7 +22,36 @@ def viv_help_view(request, *args, **kwargs):
 
 @login_required
 def homepage_view(request, *args, **kwargs):
-    return render(request, "home.html", {})
+    if request.method == 'GET':
+        t = datetime.today() - timedelta(days=3)
+        df = pandas.read_csv(static('census_info_beachhouse.csv'))
+        df[['Therapist', 'trash']] = df.primarycareteam_primarytherapist.str.split(' ', n=1, expand=True)
+        df[['DOC', 'trash.1']] = df.diagcodename_list.str.split(' ', n=1, expand=True)
+        df['LNF3'] = df['last_name'].str.slice(stop=3)
+        df['Name'] = df.loc[:, 'first_name'] + ' ' + df.loc[:, 'LNF3']
+        df = df[['Name', 'mr', 'admission_date', 'program_name', 'length_of_stay', 'age', 'sex', 'DOC', 'Therapist','paymentmethod']]
+        df['Therapist'] = df['Therapist'].replace(['Did'], 'No Assigned Therapist')
+        df['program_name'] = df['program_name'].replace(['2 Detox'], 'DTX')
+        df['program_name'] = df['program_name'].replace(['4 Residential'], 'RES')
+        df['program_name'] = df['program_name'].replace(['5 PHP'], 'PHP')
+        df['program_name'] = df['program_name'].replace(['6 IOP 5 Days'], 'IOP')
+        df['admission_date_1'] = df['admission_date']
+        df.loc[:, ('admission_date_1')] = pandas.to_datetime(df.loc[:, ('admission_date_1')])
+        new_admissions = df[(df['admission_date_1'] >= t)].sort_values(by='admission_date_1', ascending=False)
+        new_admissions[['admission_date', 'trash.2']] = df.admission_date.str.split(' ', n=1, expand=True)
+        new_admissions[['Y', 'M','D']] = new_admissions.admission_date.str.split('-', n=2, expand=True)
+        new_admissions['admission_date'] = new_admissions.loc[:,('M')] + "-" + new_admissions.loc[:,('D')] + "-" + new_admissions.loc[:,('Y')]
+        new_admissions = new_admissions[
+            ['Name', 'mr', 'admission_date', 'program_name', 'length_of_stay', 'age', 'sex', 'DOC', 'Therapist',
+             'paymentmethod']]
+        json_records = new_admissions.reset_index().to_json(orient='records')
+        data = []
+        data = json.loads(json_records)
+        context = {'d': data}
+
+
+
+    return render(request, "home.html", context)
 
 
 @login_required
