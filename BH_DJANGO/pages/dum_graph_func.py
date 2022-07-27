@@ -6,9 +6,9 @@ from IPython.display import set_matplotlib_formats
 
 
 def return_graph():
-    set_matplotlib_formats('retina', quality=100)
+    #set_matplotlib_formats('retina', quality=100)
 
-    plt.rcParams['figure.figsize'] = (8, 5)
+    plt.rcParams['figure.figsize'] = (5, 3)
 
     fig, ax = plt.subplots()
 
@@ -35,7 +35,7 @@ def return_graph():
     y = df['Count of Patients']
 
     # Bar PLot
-    bars = plt.bar(x, height=y, width=0.8, bottom=None, align='center', data=None)
+    bars = plt.bar(x, height=y, width=0.8, bottom=None, align='center', data=None, color=['purple', 'blue', 'red'])
 
     # Axis Forming
     ax.spines['top'].set_visible(False)
@@ -70,6 +70,7 @@ def return_graph():
     ax.set_ylabel('Patient Count', labelpad=15, color='#333333')
     ax.set_title('Patient Count by Level of Care', pad=15, color='#333333',
                  weight='bold')
+
 
     fig.tight_layout()
 

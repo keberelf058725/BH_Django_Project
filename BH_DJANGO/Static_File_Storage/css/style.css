@@ -24,10 +24,29 @@ margin: auto;
   padding: 0px;
       }
 
-div.home {
-max width: 840px;
-magin: 40;
+div.grid-template {
+    padding: 10px;
 
-}
-div.LOC_chart{ margin-left: 10%;
-    padding: 20px; }
+    display: grid;
+    grid-gap: 10px;
+    grid: 'Graph Text';
+    margin-left: 10%;
+    margin-right: 10%;
+
+  }
+
+  .grid-template > div {
+
+    text-align: center;
+    padding: 25px 5px;
+    font-size: 18px;
+  }
+
+
+body.home {background-color: #E1F5F5;}
+
+
+
+div.LOC_chart{ margin-left: 10%; margin-top: 5%;
+    padding: 20px; border: 3px solid steelblue; max-width: 32%;}
+
