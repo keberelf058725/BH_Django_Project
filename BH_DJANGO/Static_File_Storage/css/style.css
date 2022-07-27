@@ -26,14 +26,15 @@ margin: auto;
 
 div.grid-template {
     padding: 10px;
-
+    background-color: #E6E6E6;
     display: grid;
     grid-gap: 10px;
     grid-row-gap: 30px;
-    grid: 'Graph Text'
-             'bottom bottom';
-    margin-left: 15%;
-    margin-right: 15%;
+    grid: 'chart chart'
+        'Graph Text'
+        'bottom bottom';
+    margin-left: 5%;
+    margin-right: 0%;
 
   }
 
@@ -44,8 +45,9 @@ div.grid-template {
     font-size: 18px;
   }
 
+h2.text-center = { color: #FFFFFF;}
 
-body.home {background-color: #FCF3CF;}
+body.home {background-color: #FCF3CF; position: relative;}
 
 div.chart_2row {box-shadow: 20px 20px 10px grey;
 border-radius: 50px; height: 305px;
@@ -55,6 +57,3 @@ div.chart_1row {box-shadow: 20px 20px 10px grey;
 border-radius: 50px; height: 500px;
   width: 1260px; border-style: solid;}
 
-div.text { text-align: Left;
- margin-top: 10%;
- }

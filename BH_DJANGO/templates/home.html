@@ -4,58 +4,64 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>TableView - Startup</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <title>TableView - Startup</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
 </head>
 <body class="home">
-<div class="container" >
-  <h2 class="text-center"><u>Recent Admissions</u></h2><br>
-  <table class="table table-Default table-striped table-hover table-bordered border-dark table-sm ">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>MR</th>
-        <th>Admit Date</th>
-        <th>Level of Care</th>
-        <th>Length Of Stay</th>
-        <th>Age</th>
-        <th>Gender</th>
-        <th>Drug of Choice</th>
-        <th>Therapist</th>
-        <th>Payment Method</th>
-      </tr>
-    </thead>
-    <tbody>
-    <!-- jinja2 Technique -->
-    {% if d %}
-    {% for i in d %}
-      <tr>
-        <td>{{i.Name}}</td>
-        <td>{{i.mr}}</td>
-        <td>{{i.admission_date}}</td>
-        <td>{{i.program_name}}</td>
-        <td>{{i.length_of_stay}}</td>
-        <td>{{i.age}}</td>
-        <td>{{i.sex}}</td>
-        <td>{{i.DOC}}</td>
-        <td>{{i.Therapist}}</td>
-        <td>{{i.paymentmethod}}</td>
-      </tr>
-    {% endfor %}
-    {% endif %}
-    </tbody>
-  </table>
-</div>
-<div class="grid-template">
-    <div class="chart_2row" style="grid-area: Graph"> {{chart_LOC|safe}} </div>
-  <div class="chart_2row" style="grid-area: Text">{{chart_G|safe}}</div>
-  <div class="chart_1row" style="grid-area: bottom">{{chart_Age|safe}}</div>
-</div>
+<div style="max-width: 1500px; margin: 0 auto;">
+    <div class="grid-template">
+        <div style="grid-area: chart">
+            <div class="container">
+                <h2 class="text-center"><u>Beach House Main Analytics</u></h2><br>
+                <table class="table table-dark table-hover table-sm">
+                    <caption>Recent Admissions</caption>
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>MR</th>
+                        <th>Admit Date</th>
+                        <th>Level of Care</th>
+                        <th>Length Of Stay</th>
+                        <th>Age</th>
+                        <th>Gender</th>
+                        <th>Drug of Choice</th>
+                        <th>Therapist</th>
+                        <th>Payment Method</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!-- jinja2 Technique -->
+                    {% if d %}
+                    {% for i in d %}
+                    <tr>
+                        <td>{{i.Name}}</td>
+                        <td>{{i.mr}}</td>
+                        <td>{{i.admission_date}}</td>
+                        <td>{{i.program_name}}</td>
+                        <td>{{i.length_of_stay}}</td>
+                        <td>{{i.age}}</td>
+                        <td>{{i.sex}}</td>
+                        <td>{{i.DOC}}</td>
+                        <td>{{i.Therapist}}</td>
+                        <td>{{i.paymentmethod}}</td>
+                    </tr>
+                    {% endfor %}
+                    {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="grid-template">
+            <div class="chart_2row" style="grid-area: Graph"> {{chart_LOC|safe}}</div>
+            <div class="chart_2row" style="grid-area: Text">{{chart_G|safe}}</div>
+            <div class="chart_1row" style="grid-area: bottom">{{chart_Age|safe}}</div>
+        </div>
+    </div>
 </body>
 </html>
-    {% endblock %}
+{% endblock %}

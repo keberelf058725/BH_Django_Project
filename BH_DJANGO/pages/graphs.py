@@ -7,12 +7,13 @@ import numpy
 from django.templatetags.static import static
 
 
-
+bgcolor = '#E6E6E6'
+lbcolor = '#000000'
 
 def return_graph_LOC():
     plt.rcParams['figure.figsize'] = (5, 3)
 
-    fig, ax = plt.subplots(facecolor='#FCF3CF')
+    fig, ax = plt.subplots(facecolor=bgcolor)
 
     # pandas func
     df = pandas.read_csv(static('census_info_beachhouse.csv'))
@@ -45,10 +46,10 @@ def return_graph_LOC():
     ax.spines['top'].set_visible(False)
     ax.spines['right'].set_visible(False)
     ax.spines['left'].set_visible(False)
-    ax.spines['bottom'].set_color('#DDDDDD')
+    ax.spines['bottom'].set_color(lbcolor)
     ax.tick_params(bottom=False, left=False)
     ax.set_axisbelow(True)
-    ax.yaxis.grid(True, color='#EEEEEE')
+    ax.yaxis.grid(True, color=lbcolor)
     ax.xaxis.grid(False)
 
     # Grab the color of the bars so we can make the
@@ -64,18 +65,18 @@ def return_graph_LOC():
             bar.get_height() + 0.3,
             round(bar.get_height(), 1),
             horizontalalignment='center',
-            color='black',
+            color=lbcolor,
             weight='bold'
         )
 
     # Add labels and a title. Note the use of `labelpad` and `pad` to add some
     # extra space between the text and the tick labels.
-    ax.set_xlabel('Level of Care', labelpad=15, color='#333333', backgroundcolor='#FCF3CF')
-    ax.set_ylabel('Patient Count', labelpad=15, color='#333333', backgroundcolor='#FCF3CF')
-    ax.set_title('Patients by Level of Care', pad=15, color='#333333',
-                 weight='bold', backgroundcolor='#FCF3CF')
+    ax.set_xlabel('Level of Care', labelpad=15, color=lbcolor, backgroundcolor=bgcolor)
+    ax.set_ylabel('Patient Count', labelpad=15, color=lbcolor, backgroundcolor=bgcolor)
+    ax.set_title('Patients by Level of Care', pad=15, color=lbcolor,
+                 weight='bold', backgroundcolor=bgcolor)
     ax.margins(0)
-    ax.set_facecolor(color='#FCF3CF')
+    ax.set_facecolor(color=bgcolor)
 
 
 
@@ -90,7 +91,7 @@ def return_graph_LOC():
 def return_graph_gender():
     plt.rcParams['figure.figsize'] = (5, 3)
 
-    fig, ax = plt.subplots(facecolor='#FCF3CF')
+    fig, ax = plt.subplots(facecolor=bgcolor)
 
     # pandas func
     df = pandas.read_csv(static('census_info_beachhouse.csv'))
@@ -110,17 +111,17 @@ def return_graph_gender():
     ax.spines['top'].set_visible(False)
     ax.spines['right'].set_visible(False)
     ax.spines['left'].set_visible(False)
-    ax.spines['bottom'].set_color('#DDDDDD')
+    ax.spines['bottom'].set_color(lbcolor)
     ax.tick_params(bottom=False, left=False)
     ax.set_axisbelow(True)
-    ax.yaxis.grid(True, color='#EEEEEE')
+    ax.yaxis.grid(True, color=lbcolor)
     ax.xaxis.grid(False)
 
 
-    ax.set_title('Patients by Gender', pad=15, color='#333333',
-                 weight='bold', backgroundcolor='#FCF3CF')
+    ax.set_title('Patients by Gender', pad=15, color=lbcolor,
+                 weight='bold', backgroundcolor=bgcolor)
 
-    ax.set_facecolor(color='#FCF3CF')
+    ax.set_facecolor(color=lbcolor)
 
     imgdata = StringIO()
     fig.savefig(imgdata, format='svg')
@@ -132,7 +133,7 @@ def return_graph_gender():
 def return_graph_AGE():
     plt.rcParams['figure.figsize'] = (12, 5)
 
-    fig, ax = plt.subplots(facecolor='#FCF3CF')
+    fig, ax = plt.subplots(facecolor=bgcolor)
 
     # pandas func
     df = pandas.read_csv(static('census_info_beachhouse.csv'))
@@ -165,10 +166,10 @@ def return_graph_AGE():
     ax.spines['top'].set_visible(False)
     ax.spines['right'].set_visible(False)
     ax.spines['left'].set_visible(False)
-    ax.spines['bottom'].set_color('#DDDDDD')
+    ax.spines['bottom'].set_color(lbcolor)
     ax.tick_params(bottom=False, left=False)
     ax.set_axisbelow(True)
-    ax.yaxis.grid(True, color='#EEEEEE')
+    ax.yaxis.grid(True, color=lbcolor)
     ax.xaxis.grid(False)
 
 
@@ -185,18 +186,18 @@ def return_graph_AGE():
             bar.get_height() + 0.3,
             round(bar.get_height(), 1),
             horizontalalignment='center',
-            color='black',
+            color=lbcolor,
             weight='bold'
         )
 
     # Add labels and a title. Note the use of `labelpad` and `pad` to add some
     # extra space between the text and the tick labels.
-    ax.set_xlabel('Age Groups', labelpad=15, color='#333333', backgroundcolor='#FCF3CF')
-    ax.set_ylabel('Patient Count', labelpad=15, color='#333333', backgroundcolor='#FCF3CF')
-    ax.set_title('Patients by Age Groups', pad=15, color='#333333',
-                 weight='bold', backgroundcolor='#FCF3CF')
+    ax.set_xlabel('Age Groups', labelpad=15, color=lbcolor, backgroundcolor=bgcolor)
+    ax.set_ylabel('Patient Count', labelpad=15, color=lbcolor, backgroundcolor=bgcolor)
+    ax.set_title('Patients by Age Groups', pad=15, color=lbcolor,
+                 weight='bold', backgroundcolor=bgcolor)
     ax.margins(0)
-    ax.set_facecolor(color='#FCF3CF')
+    ax.set_facecolor(color=bgcolor)
 
 
 
