@@ -11,7 +11,7 @@ import json
 from django.templatetags.static import static
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
-from .dum_graph_func import return_graph
+from .graphs import return_graph_LOC, return_graph_AGE, return_graph_gender
 
 
 def logout_user(request):
@@ -56,7 +56,9 @@ def homepage_view(request, *args, **kwargs):
         data = json.loads(json_records)
         context = {'d': data}
         # context = {'d': data, 'chart': chart}
-        context['chart'] = return_graph()
+        context['chart_LOC'] = return_graph_LOC()
+        context['chart_G'] = return_graph_gender()
+        context['chart_Age'] = return_graph_AGE()
 
         #context = {'d': data, 'chart': chart}
 

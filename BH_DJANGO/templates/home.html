@@ -15,7 +15,7 @@
 <body class="home">
 <div class="container" >
   <h2 class="text-center"><u>Recent Admissions</u></h2><br>
-  <table class="table table-primary table-striped">
+  <table class="table table-Default table-striped table-hover table-bordered border-dark table-sm ">
     <thead>
       <tr>
         <th>Name</th>
@@ -52,8 +52,9 @@
   </table>
 </div>
 <div class="grid-template">
-    <div class="LOC_chart1"> {{chart|safe}} </div>
-        <div class="text"> This is some text</div>
+    <div class="chart_2row" style="grid-area: Graph"> {{chart_LOC|safe}} </div>
+  <div class="chart_2row" style="grid-area: Text">{{chart_G|safe}}</div>
+  <div class="chart_1row" style="grid-area: bottom">{{chart_Age|safe}}</div>
 </div>
 </body>
 </html>
