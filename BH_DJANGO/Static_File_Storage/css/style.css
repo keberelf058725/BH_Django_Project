@@ -47,7 +47,7 @@ div.grid-template {
 
 h2.text-center = { color: #FFFFFF;}
 
-body.home {background-color: #FCF3CF; position: relative;}
+body.home {background-color: #FFFFFF; position: relative;}
 
 div.chart_2row {box-shadow: 20px 20px 10px grey;
 border-radius: 50px; height: 305px;
@@ -57,3 +57,24 @@ div.chart_1row {box-shadow: 20px 20px 10px grey;
 border-radius: 50px; height: 500px;
   width: 1260px; border-style: solid;}
 
+div.flash_page {
+    padding: 10px;
+    background-color: #FFFFFF;
+    display: grid;
+    grid-gap: 10px;
+    grid-row-gap: 30px;
+    grid: 'help form'
+        ;
+    margin-left: 0%;
+    margin-right: 10%;
+
+  }
+
+  .flash_page > div {
+
+    text-align: Center;
+    padding: 10px 5px;
+    font-size: 18px;
+  }
+
+body.flashhtml {position: relative;}

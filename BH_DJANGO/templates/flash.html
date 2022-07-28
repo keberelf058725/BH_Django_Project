@@ -1,13 +1,31 @@
- {% extends 'base.html' %}
- {% block content %}
-<body>
-<form action="" method="post" enctype="multipart/form-data">
+{% extends 'base.html' %}
+{% block content %}
+<body class="flashhtml">
+<div class="flash_page">
+    <div class="help1" style="grid-area: help">
+        <u>
+            Instructions
+        </u>
+        <ul>
+            <li>
+                Move the flash report from your email to the downloads section of your file explore
+            </li>
+            <li>
+                From the Kipu
+            </li>
+        </ul>
+    </div>
+    <div class="flash_form" style="grid-area: form"><strong>
+        <form action="" method="post" enctype="multipart/form-data">
 
-    {% csrf_token %}
-    {{ form }}
-    <input type="submit" value="Analyze">
-</form>
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Analyze">
+        </form>
+    </strong>
+    </div>
+</div>
 </body>
 
 
- {% endblock %}
+{% endblock %}
