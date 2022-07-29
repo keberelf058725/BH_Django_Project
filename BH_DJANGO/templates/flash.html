@@ -1,26 +1,44 @@
 {% extends 'base.html' %}
 {% block content %}
-<body class="flashhtml">
+{% load static %}
+<body class="flash_html">
 <div class="flash_page">
     <div class="help1" style="grid-area: help">
-        <u>
-            Instructions
-        </u>
-        <ul>
+        <ol class="instructions" start="1">
+            <h2 class="in_header">
+                <u>
+                    Instructions
+                </u>
+            </h2>
             <li>
                 Move the flash report from your email to the downloads section of your file explore
             </li>
             <li>
-                From the Kipu
+                From the downloads section in Kipu download the file called Flash Manual
             </li>
-        </ul>
+            <li>
+                From the downloads section in Kipu download the file called Flash Manual
+            </li>
+            <li>
+                Click choose file for <strong>Flash File</strong> and choose the previously downloaded Flash File
+            </li>
+            <li>
+                Click choose file for <strong>Kipu File</strong> and choose the previously downloaded Kipu File
+            </li>
+            <li>
+                Click <strong>Analyze</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="f_logo" style="grid-area: logo">
+        <img class="logo_img" src="{% static 'logo.png' %}" alt="logo">
     </div>
     <div class="flash_form" style="grid-area: form"><strong>
         <form action="" method="post" enctype="multipart/form-data">
 
             {% csrf_token %}
             {{ form.as_p }}
-            <input type="submit" value="Analyze">
+            <input class="btn btn-primary" type="submit" value="Analyze">
         </form>
     </strong>
     </div>

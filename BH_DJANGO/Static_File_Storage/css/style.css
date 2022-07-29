@@ -48,6 +48,7 @@ div.grid-template {
 h2.text-center = { color: #FFFFFF;}
 
 body.home {background-color: #FFFFFF; position: relative;}
+body.flash_html {background-color: #FFFFFF; position: relative;}
 
 div.chart_2row {box-shadow: 20px 20px 10px grey;
 border-radius: 50px; height: 305px;
@@ -59,14 +60,16 @@ border-radius: 50px; height: 500px;
 
 div.flash_page {
     padding: 10px;
-    background-color: #FFFFFF;
+    border-style: solid;
     display: grid;
     grid-gap: 10px;
     grid-row-gap: 30px;
-    grid: 'help form'
+    grid: 'help logo'
+            'help form'
         ;
-    margin-left: 0%;
-    margin-right: 10%;
+    margin-left: 15%;
+    margin-right: 15%;
+    width: 1200px
 
   }
 
@@ -77,7 +80,32 @@ div.flash_page {
     font-size: 18px;
   }
 
-body.flashhtml {position: relative;}
+h2.in_header {text-align: center;}
+
+ol.instructions {
+ text-align: left; max-width: 450px;
+ margin-left: 10%;
+
+}
+
+div.flash_form {
+margin-bottom: 5%;
+border#style: solid;
+
+}
+
+div.f_logo {
+border#style: solid;
+max-width: 450px;
+margin-left: 5%;
+}
+
+
+img.logo_img {
+border#style: solid;
+max-width: 450px;
+height: 150px;
+}
 
 div.clinical_DC_form {
   margin: auto;
@@ -95,3 +123,4 @@ margin-top: 25px;
 h1.cl_head {
 margin-bottom: 40px; color: blue
 }
+

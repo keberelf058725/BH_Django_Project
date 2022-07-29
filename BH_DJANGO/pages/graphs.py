@@ -26,7 +26,7 @@ def return_graph_LOC():
     df = df.value_counts().rename_axis('Level of Care').reset_index(name='Count of Patients')
     df['colors'] = numpy.where(df['Level of Care'] == 'DTX', 'lightcoral',
                                numpy.where(df['Level of Care'] == 'RES', 'cornflowerblue',
-                                           numpy.where(df['Level of Care'] == 'PHP', 'gold',
+                                           numpy.where(df['Level of Care'] == 'PHP', 'khaki',
                                                        numpy.where(df['Level of Care'] == 'IOP', 'blueviolet',
                                                                    'black'))))
     df['sort_key'] = numpy.where(df['Level of Care'] == 'DTX', 1,
@@ -147,7 +147,7 @@ def return_graph_AGE():
     df['colors'] = numpy.where(df['Age Groups'] == '18-25', 'lightskyblue',
                                numpy.where(df['Age Groups'] == '26-35', 'whitesmoke',
                                            numpy.where(df['Age Groups'] == '36-49', 'lightsalmon',
-                                                       numpy.where(df['Age Groups'] == '50+', 'lightgrey', 'black'))))
+                                                       numpy.where(df['Age Groups'] == '50+', 'tan', 'black'))))
     df['srt_key'] = numpy.where(df['Age Groups'] == '18-25', 1,
                                 numpy.where(df['Age Groups'] == '26-35', 2,
                                             numpy.where(df['Age Groups'] == '36-49', 3,
