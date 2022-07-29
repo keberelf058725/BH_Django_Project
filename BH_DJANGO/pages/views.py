@@ -6,7 +6,7 @@ import numpy
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.models import auth
 from datetime import datetime, timedelta
-from .forms import Flash_File_Form
+from .forms import Flash_File_Form, Clinical_DC_Form
 import json
 from django.templatetags.static import static
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
@@ -60,7 +60,7 @@ def homepage_view(request, *args, **kwargs):
         context['chart_G'] = return_graph_gender()
         context['chart_Age'] = return_graph_AGE()
 
-        #context = {'d': data, 'chart': chart}
+        # context = {'d': data, 'chart': chart}
 
     return render(request, "home.html", context)
 
@@ -99,7 +99,6 @@ def viv_view(request, *args, **kwargs):
 def flash_view(request, *args, **kwargs):
     if request.method == 'POST':
         form = Flash_File_Form(request.POST)
-        print(request.FILES)
 
         # if form.is_valid():
 
@@ -159,3 +158,121 @@ def flash_view(request, *args, **kwargs):
         form = Flash_File_Form()
 
     return render(request, 'flash.html', {'form': form})
+
+
+def clinical_dc_view(request, *args, **kwargs):
+    if request.method == 'POST':
+
+        form = Clinical_DC_Form(request.POST)
+
+        LM = (pandas.Period(datetime.now(), 'M') - 1).strftime('%B')
+
+        response = HttpResponse(
+            content_type='text/csv',
+            headers={'Content-Disposition': 'attachment; filename="' + LM + '".csv"'},
+        )
+
+        ALOS_File = request.FILES['ALOS_File']
+        DC_File = request.FILES['DC_File']
+        M_S = request.POST['Start_Date']
+        M_E = request.POST['End_Date']
+        T_L = request.FILES['Therapist']
+        # inclusive
+        Month_Start = pandas.to_datetime(M_S)
+        # exclusive
+        Month_End = pandas.to_datetime(M_E)
+        # Read LOS file
+        ALOS = pandas.DataFrame(pandas.read_csv(ALOS_File, dtype=str))
+        # Read DC File
+        DC = pandas.DataFrame(pandas.read_csv(DC_File, dtype=str))
+        # Change DC Date to Date/Time
+        DC.loc[:, ('Discharge Date')] = pandas.to_datetime(DC.loc[:, ('Discharge Date')])
+        # Filter Rows to April DCs
+        DC2 = DC[(DC['Discharge Date'] >= Month_Start) & (DC['Discharge Date'] < Month_End)]
+        # Replace ADMIN DC TYPES
+        DC2['Discharge Type'] = DC2['Discharge Type'].replace(['ADMINISTRATIVE – NO SHOW', "ADMINISTRATIVE – BEHAVIORAL ", 'ADMINISTRATIVE – LEGAL'], 'ADMIN DC')
+        # REPLACE DETOX/STAB ONLY TYPES
+        DC2['Discharge Type'] = DC2['Discharge Type'].replace(['DETOX COMPLETE', 'STABILIZATION ONLY'],
+                                                              'DETOX/STAB ONLY')
+        # DROP ALL PRE-ADMISSION RECORDS
+        DC3 = DC2[DC2['Discharge Type'].str.contains('PRE-ADMISSION') == False]
+        # Grab only needed Columns
+        ALOS1 = ALOS[['MR#', 'Admission Date', 'Discharge Date', 'Detox Actual', 'Residential Actual', 'PHP/Day-Night Actual',
+             'IOP Actual', 'IIP Actual', 'PHP/Day-Night Treatment with Community Housing Actual', 'Length of Stay']]
+        # drop rows with null values
+        ALOS2 = ALOS1.dropna()
+        # Change DC Date to Date/Time
+        ALOS2.loc[:, ('Discharge Date')] = pandas.to_datetime(ALOS2['Discharge Date'])
+        # Verify D/T
+        # ALOS2.info()
+        # Filter Rows to April DCs
+        ALOS3 = ALOS2[(ALOS2['Discharge Date'] >= Month_Start) & (ALOS2['Discharge Date'] < Month_End)]
+        ALOS4 = ALOS3.rename(columns={'Length of Stay': 'UR LOS'})
+        # Merge Both Files
+        MRG = pandas.merge(DC3, ALOS4, how="left", left_on=["MR"], right_on=["MR#"], suffixes=("", ".ALOS"))
+        # Create STAGE 1 LOS
+        MRG['Detox Actual'] = pandas.to_numeric(MRG['Detox Actual'])
+        MRG['Residential Actual'] = pandas.to_numeric(MRG['Residential Actual'])
+        MRG['IIP Actual'] = pandas.to_numeric(MRG['IIP Actual'])
+        MRG['Stage 1 LOS'] = MRG.loc[:, ['Detox Actual', 'Residential Actual', 'IIP Actual']].sum(axis=1)
+        # SUM PHP COLUMNS
+        MRG['PHP Actual'] = MRG.loc[:,
+                            ['PHP/Day-Night Actual', 'PHP/Day-Night Treatment with Community Housing Actual']].sum(
+            axis=1)
+        # CREATE STAGE 2 COLUMNS
+        MRG['Stage 2 LOS'] = MRG.loc[:, ['PHP Actual', 'IOP Actual']].sum(axis=1)
+        # CREATE TOTAL LOS COLUMN
+        MRG['TOTAL LOS'] = MRG.loc[:, ['Stage 1 LOS', 'Stage 2 LOS']].sum(axis=1)
+        MRG['Stage 2 Conversion'] = numpy.where(MRG['Stage 2 LOS'] > 0, 'Converted', 'Unconverted')
+        MRG['PHP Conversion'] = numpy.where(MRG['PHP Actual'] > 0, 'Converted', 'Unconverted')
+        MRG['IOP Actual'] = pandas.to_numeric(MRG['IOP Actual'])
+        MRG['IOP Conversion'] = numpy.where(MRG['IOP Actual'] > 0, 'Converted', 'Unconverted')
+        MRG['Stage 1 to PHP Conversion'] = numpy.where((MRG['Stage 1 LOS'] > 0) & (MRG['PHP Actual'] > 0), 'Converted',
+                                                       'Unconverted')
+        MRG['HELPER'] = MRG.loc[:, ['Stage 1 LOS', 'PHP Actual']].sum(axis=1)
+        MRG['Stage 1 to IOP Conversion'] = numpy.where((MRG['IOP Actual'] > 0) & (MRG['HELPER'] > 0), 'Converted',
+                                                       'Unconverted')
+        MRG['PHP into IOP Conversion'] = numpy.where((MRG['IOP Actual'] > 0) & (MRG['PHP Actual'] > 0), 'Converted',
+                                                     'Unconverted')
+        MRG[['Statuses_1', 'Statuses_2']] = MRG.Statuses.str.split(';', n=1, expand=True)
+        MRG['Stage_1_Therapist'] = numpy.where(MRG.loc[:, ('Statuses_2')].str.contains("Campus Therapist"),
+                                               MRG.loc[:, ('Statuses_2')], MRG.loc[:, ('Statuses_1')])
+        MRG[['Stage_1_Therapist_1', 'Stage_1_Therapist_2']] = MRG.Stage_1_Therapist.str.split(': ', n=1, expand=True)
+        MRG[['Stage_1', 'Stage_1_Therapist_4']] = MRG.Stage_1_Therapist_2.str.split(',', n=1, expand=True)
+        MRG[['Stage_2', 'Stage_2_Eronious']] = MRG['Primary Therapist'].str.split(',', n=1, expand=True)
+        MRG['DCDATE_COPY'] = MRG['Discharge Date'].astype(str)
+        MRG[['DCYEAR', 'DCM', 'DCD']] = MRG.DCDATE_COPY.str.split('-', expand=True)
+        MRG['DCYT'] = MRG['DCYEAR'].str.slice(start=2)
+        MRG['DC_Month'] = MRG.loc[:, ('DCM')].astype(str) + MRG.loc[:, ('DCYT')].astype(str)
+        MRG['Admit_Yr'] = MRG.loc[:, ('DCYEAR')]
+        MRG['Admit_Yr_Filter'] = MRG.loc[:, ('DCYEAR')]
+        MRG['RELAPSE'] = numpy.where((MRG['PHP Actual'] > 0) & ((MRG['Program'].str.contains("4 - Residential")) | (
+            MRG['Program'].str.contains("4 - Residential"))), "True", "False")
+        MRG['Include_on_Campus1'] = numpy.where(MRG['Stage 2 Conversion'].str.contains("Unconverted"), "Y", "N")
+        MRG['Include_on_Campus'] = numpy.where(MRG['RELAPSE'].str.contains("True"), "Y",
+                                               MRG.loc[:, ('Include_on_Campus1')])
+        MRG1 = MRG[
+            ['First Name', 'Last Name', 'MR', 'Insurance 1   Insurance Company', 'Discharge Type', 'Admission Date',
+             'Discharge Date', 'DC_Month', 'Length Of Stay', 'Detox Actual', 'IIP Actual', 'Residential Actual',
+             'Stage 1 LOS', 'PHP Actual', 'IOP Actual', 'Stage 2 LOS', 'TOTAL LOS', 'Stage 2 Conversion',
+             'PHP Conversion', 'IOP Conversion', 'Stage 1 to PHP Conversion', 'Stage 1 to IOP Conversion',
+             'PHP into IOP Conversion', 'UR LOS', 'Stage_1', 'Stage_2', 'Program', 'Payment Method', 'Admit_Yr',
+             'Admit_Yr_Filter', 'RELAPSE', 'Include_on_Campus']]
+        TR = pandas.DataFrame(pandas.read_excel(T_L))
+        MRG2 = pandas.merge(MRG1, TR, how="left", left_on=["Stage_1"], right_on=["Full Name"], suffixes=("", "_TR"))
+        MRG3 = pandas.merge(MRG2, TR, how="left", left_on=["Stage_2"], right_on=["Full Name"], suffixes=("", "_TR"))
+        MRG3.rename(columns={'Therapist': 'S1 Therapist', 'Therapist_TR': 'S2 Therapist'}, inplace=True)
+        MRG3[['S1 Therapist', 'S2 Therapist']] = MRG3[['S1 Therapist', 'S2 Therapist']].fillna('Former Employee')
+        Final_Preped_Data = MRG3[
+            ['First Name', 'Last Name', 'MR', 'Insurance 1   Insurance Company', 'Discharge Type', 'Admission Date',
+             'Discharge Date', 'DC_Month', 'Length Of Stay', 'Detox Actual', 'IIP Actual', 'Residential Actual',
+             'Stage 1 LOS', 'PHP Actual', 'IOP Actual', 'Stage 2 LOS', 'TOTAL LOS', 'Stage 2 Conversion',
+             'PHP Conversion', 'IOP Conversion', 'Stage 1 to PHP Conversion', 'Stage 1 to IOP Conversion',
+             'PHP into IOP Conversion', 'UR LOS', 'S1 Therapist', 'S2 Therapist', 'Program', 'Payment Method',
+             'Admit_Yr', 'Admit_Yr_Filter', 'RELAPSE', 'Include_on_Campus']]
+        Final_Preped_Data.to_csv(path_or_buf=response, float_format='%.2f', index=False, decimal=".")
+        return response
+    else:
+        form = Clinical_DC_Form()
+
+    return render(request, 'clinical.html', {'form': form})

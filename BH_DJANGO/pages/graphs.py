@@ -205,5 +205,4 @@ def return_graph_AGE():
     data = imgdata.getvalue()
     return data
 
-# SESSION_EXPIRE_AT_BROWSER_CLOSE = True
-# https://stackoverflow.com/questions/9267957/is-there-a-way-to-combine-behavior-of-session-expire-at-browser-close-and-sessio/9290334#9290334
+

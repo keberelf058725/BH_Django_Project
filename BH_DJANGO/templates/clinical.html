@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block content %}
+<body>
+<div class="clinical_DC_form"><strong>
+    <h1 class="cl_head">Clinical Discharge Report Data Prep</h1>
+
+    <form action="" method="post" enctype="multipart/form-data">
+
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input class="btn btn-primary" type="submit" value="Analyze">
+
+    </form>
+
+    <p class="refresh"><a class="btn btn-primary" href="{% url 'clinical' %}">Refresh Page</a></p>
+</strong>
+</div>
+</body>
+{% endblock %}

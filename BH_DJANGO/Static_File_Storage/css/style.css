@@ -78,3 +78,20 @@ div.flash_page {
   }
 
 body.flashhtml {position: relative;}
+
+div.clinical_DC_form {
+  margin: auto;
+  width: 640px;
+  padding: 50px;
+  font-family: 'Avenir', sans-serif;
+  color: #33475b;
+  border: 5px solid blue;
+      }
+
+p.refresh {
+margin-top: 25px;
+}
+
+h1.cl_head {
+margin-bottom: 40px; color: blue
+}
