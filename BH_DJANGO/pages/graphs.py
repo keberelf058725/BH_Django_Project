@@ -7,14 +7,17 @@ import pandas
 import numpy
 from django.templatetags.static import static
 
-bgcolor = '#E6E6E6'
+#removed color
+#bgcolor = ''
 lbcolor = '#000000'
 
 
 def return_graph_LOC():
     plt.rcParams['figure.figsize'] = (5, 3)
 
-    fig, ax = plt.subplots(facecolor=bgcolor)
+    #removed color
+    #fig, ax = plt.subplots(facecolor=bgcolor)
+    fig, ax = plt.subplots()
 
     # pandas func
     df = pandas.read_csv(static('census_info_beachhouse.csv'))
@@ -73,15 +76,22 @@ def return_graph_LOC():
 
     # Add labels and a title. Note the use of `labelpad` and `pad` to add some
     # extra space between the text and the tick labels.
-    ax.set_xlabel('Level of Care', labelpad=15, color=lbcolor, backgroundcolor=bgcolor)
+    """ax.set_xlabel('Level of Care', labelpad=15, color=lbcolor, backgroundcolor=bgcolor)
     ax.set_ylabel('Patient Count', labelpad=15, color=lbcolor, backgroundcolor=bgcolor)
     ax.set_title('Patients by Level of Care', pad=15, color=lbcolor,
                  weight='bold', backgroundcolor=bgcolor)
     ax.margins(0)
-    ax.set_facecolor(color=bgcolor)
+    ax.set_facecolor(color=bgcolor)"""
+
+    ax.set_xlabel('Level of Care', labelpad=15, color=lbcolor)
+    ax.set_ylabel('Patient Count', labelpad=15, color=lbcolor)
+    ax.set_title('Patients by Level of Care', pad=15, color=lbcolor,
+                 weight='bold')
+    ax.margins(0)
+    #ax.set_facecolor()
 
     imgdata = StringIO()
-    fig.savefig(imgdata, format='svg')
+    fig.savefig(imgdata, format='svg', transparent=True)
     imgdata.seek(0)
 
     data = imgdata.getvalue()
@@ -91,8 +101,8 @@ def return_graph_LOC():
 def return_graph_gender():
     plt.rcParams['figure.figsize'] = (5, 3)
 
-    fig, ax = plt.subplots(facecolor=bgcolor)
-
+    #fig, ax = plt.subplots(facecolor=bgcolor)
+    fig, ax = plt.subplots()
     # pandas func
     df = pandas.read_csv(static('census_info_beachhouse.csv'))
     df = df[['sex']]
@@ -117,13 +127,15 @@ def return_graph_gender():
     ax.yaxis.grid(True, color=lbcolor)
     ax.xaxis.grid(False)
 
+    #ax.set_title('Patients by Gender', pad=15, color=lbcolor,
+                 #weight='bold', backgroundcolor=bgcolor)
     ax.set_title('Patients by Gender', pad=15, color=lbcolor,
-                 weight='bold', backgroundcolor=bgcolor)
+                 weight='bold')
 
     ax.set_facecolor(color=lbcolor)
 
     imgdata = StringIO()
-    fig.savefig(imgdata, format='svg')
+    fig.savefig(imgdata, format='svg', transparent=True)
     imgdata.seek(0)
 
     data = imgdata.getvalue()
@@ -133,7 +145,8 @@ def return_graph_gender():
 def return_graph_AGE():
     plt.rcParams['figure.figsize'] = (12, 5)
 
-    fig, ax = plt.subplots(facecolor=bgcolor)
+    """fig, ax = plt.subplots(facecolor=bgcolor)"""
+    fig, ax = plt.subplots()
 
     # pandas func
     df = pandas.read_csv(static('census_info_beachhouse.csv'))
@@ -147,7 +160,7 @@ def return_graph_AGE():
     df['colors'] = numpy.where(df['Age Groups'] == '18-25', 'lightskyblue',
                                numpy.where(df['Age Groups'] == '26-35', 'whitesmoke',
                                            numpy.where(df['Age Groups'] == '36-49', 'lightsalmon',
-                                                       numpy.where(df['Age Groups'] == '50+', 'tan', 'black'))))
+                                                       numpy.where(df['Age Groups'] == '50+', 'lightgrey', 'black'))))
     df['srt_key'] = numpy.where(df['Age Groups'] == '18-25', 1,
                                 numpy.where(df['Age Groups'] == '26-35', 2,
                                             numpy.where(df['Age Groups'] == '36-49', 3,
@@ -191,15 +204,21 @@ def return_graph_AGE():
 
     # Add labels and a title. Note the use of `labelpad` and `pad` to add some
     # extra space between the text and the tick labels.
-    ax.set_xlabel('Age Groups', labelpad=15, color=lbcolor, backgroundcolor=bgcolor)
+    """ax.set_xlabel('Age Groups', labelpad=15, color=lbcolor, backgroundcolor=bgcolor)
     ax.set_ylabel('Patient Count', labelpad=15, color=lbcolor, backgroundcolor=bgcolor)
     ax.set_title('Patients by Age Groups', pad=15, color=lbcolor,
                  weight='bold', backgroundcolor=bgcolor)
     ax.margins(0)
-    ax.set_facecolor(color=bgcolor)
+    ax.set_facecolor(color=bgcolor)"""
+    ax.set_xlabel('Age Groups', labelpad=15, color=lbcolor)
+    ax.set_ylabel('Patient Count', labelpad=15, color=lbcolor)
+    ax.set_title('Patients by Age Groups', pad=15, color=lbcolor,
+                 weight='bold')
+    ax.margins(0)
+    #ax.set_facecolor()
 
     imgdata = StringIO()
-    fig.savefig(imgdata, format='svg')
+    fig.savefig(imgdata, format='svg', transparent=True)
     imgdata.seek(0)
 
     data = imgdata.getvalue()

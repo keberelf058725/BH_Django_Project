@@ -2,6 +2,7 @@
 
 {% block content %}
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
     <title>TableView - Startup</title>
@@ -12,13 +13,13 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
 </head>
-<body class="home">
+<body class="home" style="background-image: url('{% static 'beach_img.jpg'%}');">
 <div style="max-width: 1500px; margin: 0 auto;">
     <div class="grid-template">
         <div style="grid-area: chart">
             <div class="container">
                 <h2 class="text-center"><u>Beach House Main Analytics</u></h2><br>
-                <table class="table table-dark table-hover table-sm">
+                <table class="table table-Default table-hover table-bordered table-sm">
                     <caption>- Recent Admissions</caption>
                     <thead>
                     <tr>

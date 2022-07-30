@@ -18,3 +18,7 @@ class Clinical_DC_Form(forms.Form):
     ALOS_File = forms.FileField(label='ALOS File', required=True, validators=[FileExtensionValidator(allowed_extensions=['csv'])])
     DC_File = forms.FileField(label='Discharge Info File', required=True, validators=[FileExtensionValidator(allowed_extensions=['csv'])])
     Therapist = forms.FileField(label='Therapist List', required=True, validators=[FileExtensionValidator(allowed_extensions=['xlsx'])])
+
+
+class Vivitrol_Form(forms.Form):
+    Viv_File = forms.FileField(label='Vivitrol File', validators=[FileExtensionValidator(allowed_extensions=['csv'])])
