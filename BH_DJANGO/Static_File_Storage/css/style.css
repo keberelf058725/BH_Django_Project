@@ -127,6 +127,20 @@ div.clinical_DC_form {
   border: 5px solid blue;
       }
 
+input.cl_dl_button {
+margin-left: 5px;
+}
+
+ul.cl_dl_dlink {
+margin-top: 5%;
+}
+
+body.cl_rsults {
+background-repeat: no-repeat;
+background-position: top;
+background-size: cover;
+}
+
 p.refresh {
 margin-top: 25px;
 }
@@ -135,3 +149,41 @@ h1.cl_head {
 margin-bottom: 40px; color: blue
 }
 
+
+
+body.flash_tools {
+position: relative;
+background-repeat: no-repeat;
+background-position: top;
+background-size: cover;
+}
+
+div.refresh_button {
+margin-top: 50px;
+margin-left: 150px;
+}
+
+div.flash_tools_div {
+margin-left: 250px;
+}
+
+div.fltool_grid {
+    padding: 10px;
+    background#color: #E6E6E6;
+    display: grid;
+    grid-gap: 10px;
+    grid-row-gap: 30px;
+    grid: 'instr gform'
+        ;
+    margin-left: 0%;
+    margin-right: 0%;
+    width: 1200px
+
+  }
+
+  .grid-template > div {
+
+    text-align: Center;
+    padding: 10px 5px;
+    font-size: 18px;
+  }

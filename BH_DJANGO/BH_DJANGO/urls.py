@@ -19,7 +19,6 @@ from django.contrib.auth import views as auth_views
 
 from pages import views
 
-
 urlpatterns = [
     path('viv_help/', views.viv_help_view, name='viv_help'),
     path('accounts/login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
@@ -29,5 +28,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('logout/', views.logout_user, name="logout"),
     path('clinical/', views.clinical_dc_view, name='clinical'),
+    path('cl_dc_dl/', views.cl_dc_dl_view, name='cl_dc_dl'),
+    path('flash_tools/', views.flash_report_tools_view, name='flash_tools'),
 
 ]

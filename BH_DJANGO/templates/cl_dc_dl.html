@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% load static %}
+<body class="cl_rsults" style="background-image: url('{% static 'beach_img.jpg'%}');">
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-success" role="alert">
+    {{ message|safe }}
+</div>
+{% endfor %}
+{% endif %}
+<div>
+    <form method="post"> {% csrf_token %}
+        <ul class="cl_dl_dlink">
+            <li>
+                <u>Download the current months clinical discharge report data:</u>
+                <input class="cl_dl_button" name="cl_dl" type="submit" value="Download">
+            </li>
+        </ul>
+    </form>
+</div>
+</body>
+{% endblock %}
