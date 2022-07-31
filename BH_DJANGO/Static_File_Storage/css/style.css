@@ -187,6 +187,7 @@ div.fltool_grid {
     grid-gap: 10px;
     grid-row-gap: 30px;
     grid: 'instr gform'
+            'dlb gform'
         ;
     margin-left: 0%;
     margin-right: 0%;
@@ -200,3 +201,8 @@ div.fltool_grid {
     padding: 10px 5px;
     font-size: 18px;
   }
+
+div.dl_fl_changes {
+margin-left: 20%;
+margin-top: 70%;
+}

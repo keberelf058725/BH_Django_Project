@@ -32,6 +32,16 @@
             </ul>
             <input name="report_refresh" class="btn btn-info" type="submit" value="Refresh Power BI Report">
         </div>
+        <div class="dl_fl_changes" style="grid-area: dlb">
+            <form method="post"> {% csrf_token %}
+                <strong>
+                    <u>
+                        Download Census Changes
+                    </u>
+                </strong>
+                <input class="btn btn-info" name="fl_changes" type="submit" value="Download">
+            </form>
+        </div>
     </form>
     <div class="flash_tools_div" style="grid-area: gform">
         <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSeQIcLOVLmW6trL9m6mHRCFGu_4FPHcbM1nqks2_SzwTu2LsA/viewform?embedded=true"

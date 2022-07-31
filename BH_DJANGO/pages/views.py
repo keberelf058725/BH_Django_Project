@@ -369,6 +369,18 @@ def flash_report_tools_view(request, *args, **kwargs):
 
             requests.post('https://prod-176.westus.logic.azure.com:443/workflows/ea291131ff8a4a2f919d0f854a31a4ec/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=E68W4i4IA8AWzu4TSyBaxcVZipma60B5Nd_lUGGVbVg')
 
+        if 'fl_changes' in request.POST:
+            response = HttpResponse(
+                content_type='text/csv',
+                headers={'Content-Disposition': 'attachment; filename="yesterday_census_changes.csv"'},
+            )
+
+            df = pandas.read_csv(static('Flash_Changes.csv'))
+
+            df.to_csv(path_or_buf=response, float_format='%.2f', index=False, decimal=".")
+
+            return response
+
         return render(request, 'flash_tools.html', {})
 
     return render(request, 'flash_tools.html', {})
