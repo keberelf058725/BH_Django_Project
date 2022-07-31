@@ -3,13 +3,11 @@
 {% block content %}
 {% load static %}
 <body class="cl_rsults" style="background-image: url('{% static 'beach_img.jpg'%}');">
-{% if messages %}
-{% for message in messages %}
-<div class="alert alert-success" role="alert">
-    {{ message|safe }}
+<div class="success_mess">
+    <strong>
+        Congratulations, data compiling was a success! Please click below to start download; download will appear in the bottom left corner.
+    </strong>
 </div>
-{% endfor %}
-{% endif %}
 <div>
     <form method="post"> {% csrf_token %}
         <ul class="cl_dl_dlink">

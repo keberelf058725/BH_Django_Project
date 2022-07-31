@@ -333,9 +333,9 @@ def clinical_dc_view(request, *args, **kwargs):
 
         if 'cl_dl' in request.POST:
 
-            messages.success(request,
+            """messages.success(request,
                              'Congratulations!! Please click on the button below to begin the download!'
-                             )
+                             )"""
 
             df = pandas.read_pickle("./df.pkl")
 

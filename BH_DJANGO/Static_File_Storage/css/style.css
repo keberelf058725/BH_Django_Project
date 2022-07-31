@@ -63,11 +63,13 @@ body.flash_html {background-color: #FFFFFF; position: relative;}
 
 div.chart_2row {box-shadow: 20px 20px 10px grey;
 border-radius: 50px; height: 305px;
-  width: 600px; border-style: solid;}
+  width: 600px; border-style: solid;
+  background-color:rgba(255, 255, 255, 0.2)}
 
 div.chart_1row {box-shadow: 20px 20px 10px grey;
 border-radius: 50px; height: 500px;
-  width: 1260px; border-style: solid;}
+  width: 1260px; border-style: solid;
+  background-color:rgba(255, 255, 255, 0.2)}
 
 div.flash_page {
     padding: 10px;
@@ -131,6 +133,16 @@ input.cl_dl_button {
 margin-left: 5px;
 }
 
+div.success_mess {
+border: 5px solid green;
+width: 1050px;
+height: 75px;
+border-radius: 50px;
+text-align: Center;
+padding: 20px 0;
+background-color:rgba(0, 128, 0, 0.2)
+}
+
 ul.cl_dl_dlink {
 margin-top: 5%;
 }
@@ -161,6 +173,7 @@ background-size: cover;
 div.refresh_button {
 margin-top: 50px;
 margin-left: 150px;
+
 }
 
 div.flash_tools_div {
