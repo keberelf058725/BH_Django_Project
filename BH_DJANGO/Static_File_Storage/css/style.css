@@ -45,8 +45,12 @@ div.grid-template {
     font-size: 18px;
   }
 
+caption.home_dl {
+margin-left: 5%;
+}
+
 div.container{background-color:rgba(255, 255, 255, 0.2);
-font-weight: bold;}
+font-weight: bold; border-radius: 50px;}
 
 h2.text-center = { color: #FFFFFF;}
 
