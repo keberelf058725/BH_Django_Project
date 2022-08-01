@@ -33,13 +33,36 @@
             <input name="report_refresh" class="btn btn-info" type="submit" value="Refresh Power BI Report">
         </div>
         <div class="dl_fl_changes" style="grid-area: dlb">
+            <h3 style="text-align: center">Yesterday's Census Changes</h3>
             <form method="post"> {% csrf_token %}
-                <strong>
-                    <u>
-                        Download Census Changes
-                    </u>
-                </strong>
-                <input class="btn btn-info" name="fl_changes" type="submit" value="Download">
+                <table class="table table-Default table-hover table-bordered table-sm">
+                    <form action="" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <caption class="home_dl">- <input class="btn btn-info" name="fl_changes" type="submit"
+                                                          value="Download Full File">
+                        </caption>
+                        <thead>
+                        <tr>
+                            <th>Patient</th>
+                            <th>Change</th>
+                            <th>LOC Change</th>
+                            <th>Commit LOS</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <!-- jinja2 Technique -->
+                        {% if d %}
+                        {% for i in d %}
+                        <tr>
+                            <td>{{i.Patient}}</td>
+                            <td>{{i.Change}}</td>
+                            <td>{{i.LOC_Change}}</td>
+                            <td>{{i.Commit_LOS}}</td>
+                        </tr>
+                        {% endfor %}
+                        {% endif %}
+                        </tbody>
+                </table>
             </form>
         </div>
     </form>

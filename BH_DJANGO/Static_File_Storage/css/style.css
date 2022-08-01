@@ -64,12 +64,12 @@ body.flash_html {background-color: #FFFFFF; position: relative;}
 div.chart_2row {box-shadow: 20px 20px 10px grey;
 border-radius: 50px; height: 305px;
   width: 600px; border-style: solid;
-  background-color:rgba(255, 255, 255, 0.2)}
+  background-color:rgba(255, 255, 255, 0.2);}
 
 div.chart_1row {box-shadow: 20px 20px 10px grey;
 border-radius: 50px; height: 500px;
   width: 1260px; border-style: solid;
-  background-color:rgba(255, 255, 255, 0.2)}
+  background-color:rgba(255, 255, 255, 0.2);}
 
 div.flash_page {
     padding: 10px;
@@ -191,7 +191,9 @@ div.fltool_grid {
         ;
     margin-left: 0%;
     margin-right: 0%;
-    width: 1200px
+    width: 1500px;
+    background-color:rgba(255, 255, 255, 0.2);
+    border-radius: 50px;
 
   }
 
@@ -204,5 +206,7 @@ div.fltool_grid {
 
 div.dl_fl_changes {
 margin-left: 20%;
-margin-top: 70%;
+margin-top: 45%;
+width: 400px;
+font-weight: bold;
 }

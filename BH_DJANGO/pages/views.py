@@ -364,6 +364,8 @@ def cl_dc_dl_view(request, *args, **kwargs):
 
 @login_required
 def flash_report_tools_view(request, *args, **kwargs):
+
+
     if request.method == 'POST':
         if 'report_refresh' in request.POST:
 
@@ -383,5 +385,14 @@ def flash_report_tools_view(request, *args, **kwargs):
 
         return render(request, 'flash_tools.html', {})
 
-    return render(request, 'flash_tools.html', {})
+    if request.method == 'GET':
+        df = pandas.read_csv(static('Flash_Changes.csv'))
+        df = df[['Patient', 'Change', 'LOC_Change', 'Commit_LOS']]
+        json_records = df.reset_index().to_json(orient='records')
+        # data = []
+        data = json.loads(json_records)
+        context = {'d': data}
+
+
+    return render(request, 'flash_tools.html', context)
 
