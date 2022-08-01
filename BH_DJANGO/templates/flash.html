@@ -1,6 +1,13 @@
 {% extends 'base.html' %}
 {% block content %}
 {% load static %}
+{% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-danger" role="alert">
+        {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
 <body class="flash_html">
 <div class="flash_page">
     <div class="help1" style="grid-area: help">

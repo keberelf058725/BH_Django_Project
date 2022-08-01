@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
 
 {% block content %}
-{% if messages %}
+<div class="viv_css">
+    {% if messages %}
 {% for message in messages %}
-<div>
+<div class="alert alert-success" role="alert">
     <strong>{{message|safe}}</strong>
 </div>
 {% endfor %}
-{% else %}
-<div class="viv_css">
+{% endif %}
     <h2>Vivitrol Count Analyzer</h2>
 <p>
     <font size="+1"><strong>Instructions on downloading file</strong><font>
@@ -36,5 +36,4 @@
     </div>
 </form>
 </div>
-{% endif %}
 {% endblock %}

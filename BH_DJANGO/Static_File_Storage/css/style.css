@@ -49,7 +49,7 @@ caption.home_dl {
 margin-left: 5%;
 }
 
-div.container{background-color:rgba(255, 255, 255, 0.2);
+div.container{background-color:rgba(255, 255, 255, 0.4);
 font-weight: bold; border-radius: 50px;}
 
 h2.text-center = { color: #FFFFFF;}
@@ -64,12 +64,12 @@ body.flash_html {background-color: #FFFFFF; position: relative;}
 div.chart_2row {box-shadow: 20px 20px 10px grey;
 border-radius: 50px; height: 305px;
   width: 600px; border-style: solid;
-  background-color:rgba(255, 255, 255, 0.2);}
+  background-color:rgba(255, 255, 255, 0.4);}
 
 div.chart_1row {box-shadow: 20px 20px 10px grey;
 border-radius: 50px; height: 500px;
   width: 1260px; border-style: solid;
-  background-color:rgba(255, 255, 255, 0.2);}
+  background-color:rgba(255, 255, 255, 0.4);}
 
 div.flash_page {
     padding: 10px;

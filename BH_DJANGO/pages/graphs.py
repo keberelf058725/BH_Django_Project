@@ -160,7 +160,7 @@ def return_graph_AGE():
     df['colors'] = numpy.where(df['Age Groups'] == '18-25', 'lightskyblue',
                                numpy.where(df['Age Groups'] == '26-35', 'whitesmoke',
                                            numpy.where(df['Age Groups'] == '36-49', 'lightsalmon',
-                                                       numpy.where(df['Age Groups'] == '50+', 'lightgrey', 'black'))))
+                                                       numpy.where(df['Age Groups'] == '50+', 'plum', 'black'))))
     df['srt_key'] = numpy.where(df['Age Groups'] == '18-25', 1,
                                 numpy.where(df['Age Groups'] == '26-35', 2,
                                             numpy.where(df['Age Groups'] == '36-49', 3,
