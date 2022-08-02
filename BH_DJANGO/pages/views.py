@@ -12,7 +12,7 @@ import json
 from django.templatetags.static import static
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
-from .graphs import return_graph_LOC, return_graph_AGE, return_graph_gender
+from .graphs import return_graph_LOC, return_graph_AGE, return_graph_gender,return_graph_DOC
 from requests import post
 
 pandas.options.mode.chained_assignment = None
@@ -69,6 +69,11 @@ def homepage_view(request, *args, **kwargs):
     if request.method == 'GET':
         t = datetime.today() - timedelta(days=3)
         df = pandas.read_csv(static('census_info_beachhouse.csv'))
+        df2 = pandas.read_csv(static('census_info_beachhouse.csv'))
+        df2[['Therapist', 'trash']] = df2.primarycareteam_primarytherapist.str.split(' ', n=1, expand=True)
+        df2['Therapist'] = df2['Therapist'].replace(['Did'], 'No Assigned Therapist')
+        df2 = df2[['Therapist']]
+        df2 = df2.value_counts().rename_axis('Therapist').reset_index(name='Count_of_Patients')
         df[['Therapist', 'trash']] = df.primarycareteam_primarytherapist.str.split(' ', n=1, expand=True)
         df[['DOC', 'trash.1']] = df.diagcodename_list.str.split(' ', n=1, expand=True)
         df['LNF3'] = df['last_name'].str.slice(stop=3)
@@ -88,17 +93,21 @@ def homepage_view(request, *args, **kwargs):
         new_admissions['admission_date'] = new_admissions.loc[:, ('M')] + "-" + new_admissions.loc[:,
                                                                                 ('D')] + "-" + new_admissions.loc[:,
                                                                                                ('Y')]
+
         new_admissions = new_admissions[
             ['Name', 'mr', 'admission_date', 'program_name', 'length_of_stay', 'age', 'sex', 'DOC', 'Therapist',
              'paymentmethod']]
         json_records = new_admissions.reset_index().to_json(orient='records')
+        json_records2 = df2.reset_index().to_json(orient='records')
 
         data = json.loads(json_records)
-        context = {'d': data}
+        data2 = json.loads(json_records2)
+        context = {'d': data, 'd2': data2}
 
         context['chart_LOC'] = return_graph_LOC()
         context['chart_G'] = return_graph_gender()
         context['chart_Age'] = return_graph_AGE()
+        context['chart_DOC'] = return_graph_DOC()
 
 
 

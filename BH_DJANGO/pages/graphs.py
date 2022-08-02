@@ -7,8 +7,7 @@ import pandas
 import numpy
 from django.templatetags.static import static
 
-#removed color
-#bgcolor = ''
+DOC_color = 'seagreen'
 lbcolor = '#000000'
 
 
@@ -224,4 +223,82 @@ def return_graph_AGE():
     data = imgdata.getvalue()
     return data
 
+def return_graph_DOC():
+    plt.rcParams['figure.figsize'] = (12, 5)
+
+    """fig, ax = plt.subplots(facecolor=bgcolor)"""
+    fig, ax = plt.subplots()
+
+    # pandas func
+    df = pandas.read_csv(static('census_info_beachhouse.csv'))
+    df[['DOC', 'trash.1']] = df.diagcodename_list.str.split(' ', n=1, expand=True)
+    df[['DOC', 'trash.1']] = df.DOC.str.split(',', n=1, expand=True)
+    df['DOC'] = df['DOC'].replace(['Amphetamine-type'], 'Amphetamine')
+    df = df[['DOC']]
+    df = df.value_counts().rename_axis('DOC').reset_index(name='Count of Patients')
+    df['colors'] = numpy.where(df['DOC'] == 'Alcohol', DOC_color,
+                               numpy.where(df['DOC'] == 'Opioid', DOC_color,
+                                           numpy.where(df['DOC'] == 'Sedative', DOC_color,
+                                                       numpy.where(df['DOC'] == 'Amphetamine', DOC_color,
+                                                                   numpy.where(df['DOC'] == 'Cannabis', DOC_color,
+                                                                               numpy.where(df['DOC'] == 'Cocaine',DOC_color ,DOC_color))))))
+    df['srt_key'] = numpy.where(df['DOC'] == 'Alcohol', 1,
+                               numpy.where(df['DOC'] == 'Opioid', 2,
+                                           numpy.where(df['DOC'] == 'Sedative', 3,
+                                                       numpy.where(df['DOC'] == 'Amphetamine', 4,
+                                                                   numpy.where(df['DOC'] == 'Cannabis', 5,
+                                                                               numpy.where(df['DOC'] == 'Cocaine', 6, 7))))))
+    df = df.sort_values('srt_key').reset_index(drop=True)
+
+    # Values for PLot
+    c = df['colors']
+    x = df['DOC']
+    y = df['Count of Patients']
+
+    # Bar PLot
+    bars = plt.bar(x, height=y, width=0.8, bottom=None, align='center', data=None, color=c)
+    # ['purple', 'blue', 'red']
+    # Axis Forming
+    ax.spines['top'].set_visible(False)
+    ax.spines['right'].set_visible(False)
+    ax.spines['left'].set_visible(False)
+    ax.spines['bottom'].set_color(lbcolor)
+    ax.tick_params(bottom=False, left=False)
+    ax.set_axisbelow(True)
+    ax.yaxis.grid(True, color=lbcolor)
+    ax.xaxis.grid(False)
+
+    # Grab the color of the bars so we can make the
+    # text the same color.
+    bar_color = bars[1].get_facecolor()
+
+    # Add text annotations to the top of the bars.
+    # Note, you'll have to adjust this slightly (the 0.3)
+    # with different data.
+    for bar in bars:
+        ax.text(
+            bar.get_x() + bar.get_width() / 2,
+            bar.get_height() + 0.3,
+            round(bar.get_height(), 1),
+            horizontalalignment='center',
+            color=lbcolor,
+            weight='bold'
+        )
+
+    # Add labels and a title. Note the use of `labelpad` and `pad` to add some
+    # extra space between the text and the tick labels.
+
+    ax.set_xlabel('Drug of Choice', labelpad=15, color=lbcolor)
+    ax.set_ylabel('Patient Count', labelpad=15, color=lbcolor)
+    ax.set_title('Patients by DOC', pad=15, color=lbcolor,
+                 weight='bold')
+    ax.margins(0)
+
+
+    imgdata = StringIO()
+    fig.savefig(imgdata, format='svg', transparent=True)
+    imgdata.seek(0)
+
+    data = imgdata.getvalue()
+    return data
 

@@ -22,7 +22,8 @@
                 <table class="table table-Default table-hover table-bordered table-sm">
                     <form action="" method="post" enctype="multipart/form-data">
                         {% csrf_token %}
-                        <caption class="home_dl"><input class="btn btn-primary" type="submit" value="Download"> - Recent Admissions
+                        <caption class="home_dl"><input class="btn btn-primary" type="submit" value="Download"> - Recent
+                            Admissions
                         </caption>
                         <thead>
                         <tr>
@@ -64,6 +65,31 @@
             <div class="chart_2row" style="grid-area: Graph"> {{chart_LOC|safe}}</div>
             <div class="chart_2row" style="grid-area: Text">{{chart_G|safe}}</div>
             <div class="chart_1row" style="grid-area: bottom">{{chart_Age|safe}}</div>
+            <div class="chart_3row" style="grid-area: rowthree">{{chart_DOC|safe}}</div>
+            <div class="container2" style="grid-area: chart2">
+                <table id="table2" class="table table-Default table-hover table-bordered table-sm">
+                    <h2> Therapist Caseload</h2>
+                    <caption class="therapist_caseload">- Future Download Button
+                    </caption>
+                    <thead>
+                    <tr>
+                        <th>Therapist</th>
+                        <th>Patient Count</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!-- jinja2 Technique -->
+                    {% if d2 %}
+                    {% for i in d2 %}
+                    <tr>
+                        <td>{{i.Therapist}}</td>
+                        <td>{{i.Count_of_Patients}}</td>
+                    </tr>
+                    {% endfor %}
+                    {% endif %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </body>
