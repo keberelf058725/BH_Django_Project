@@ -22,7 +22,7 @@
                 <table class="table table-Default table-hover table-bordered table-sm">
                     <form action="" method="post" enctype="multipart/form-data">
                         {% csrf_token %}
-                        <caption class="home_dl"><input class="btn btn-primary" type="submit" value="Download"> - Recent
+                        <caption class="home_dl"><input name="recent_ad" class="btn btn-primary" type="submit" value="Download"> - Recent
                             Admissions
                         </caption>
                         <thead>
@@ -70,7 +70,11 @@
             <div class="container2" style="grid-area: chart2">
                 <table id="table2" class="table table-Default table-hover table-bordered table-sm">
                     <h2> Therapist Caseload</h2>
-                    <caption class="therapist_caseload">- Future Download Button
+                    <caption class="therapist_caseload">
+                        <form action="" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                        <input name="caseload" class="btn btn-primary" type="submit" value="Download"> - Caseload
+                        </form>
                     </caption>
                     <thead>
                     <tr>
