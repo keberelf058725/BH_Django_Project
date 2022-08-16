@@ -10,6 +10,9 @@ from django.templatetags.static import static
 DOC_color = 'seagreen'
 lbcolor = '#000000'
 
+census_path = '/home/beachhouse/PycharmProjects/BH_Django_Project/BH_DJANGO/Static_File_Storage/census_info_beachhouse.csv'
+
+flash_path = '/home/beachhouse/PycharmProjects/BH_Django_Project/BH_DJANGO/Static_File_Storage/Flash_Changes.csv'
 
 def return_graph_LOC():
     plt.rcParams['figure.figsize'] = (5, 3)
@@ -19,7 +22,7 @@ def return_graph_LOC():
     fig, ax = plt.subplots()
 
     # pandas func
-    df = pandas.read_csv(static('census_info_beachhouse.csv'))
+    df = pandas.read_csv(census_path)
     df['program_name'] = df['program_name'].replace(['2 Detox'], 'DTX')
     df['program_name'] = df['program_name'].replace(['4 Residential'], 'RES')
     df['program_name'] = df['program_name'].replace(['5 PHP Day Night Treatment with Community Hou'], 'PHP')
@@ -103,7 +106,7 @@ def return_graph_gender():
     #fig, ax = plt.subplots(facecolor=bgcolor)
     fig, ax = plt.subplots()
     # pandas func
-    df = pandas.read_csv(static('census_info_beachhouse.csv'))
+    df = pandas.read_csv(census_path)
     df = df[['sex']]
     df = df.value_counts().rename_axis('Gender').reset_index(name='Count of Patients')
 
@@ -148,7 +151,7 @@ def return_graph_AGE():
     fig, ax = plt.subplots()
 
     # pandas func
-    df = pandas.read_csv(static('census_info_beachhouse.csv'))
+    df = pandas.read_csv(census_path)
     df = df[['age']]
     df['age_groups'] = numpy.where(df['age'] <= 25, '18-25',
                                    numpy.where((df['age'] > 25) & (df['age'] <= 35), '26-35',
@@ -230,7 +233,7 @@ def return_graph_DOC():
     fig, ax = plt.subplots()
 
     # pandas func
-    df = pandas.read_csv(static('census_info_beachhouse.csv'))
+    df = pandas.read_csv(census_path)
     df[['DOC', 'trash.1']] = df.diagcodename_list.str.split(' ', n=1, expand=True)
     df[['DOC', 'trash.1']] = df.DOC.str.split(',', n=1, expand=True)
     df['DOC'] = df['DOC'].replace(['Amphetamine-type'], 'Amphetamine')

@@ -1,16 +1,18 @@
 <!DOCTYPE html>
-{% load static %}
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}"/>
     <title>LoginSystem</title>
 </head>
-{% load static %}
+
 <div>
-    <img class="login_img" src="{% static 'logo.png' %}" alt="logo">
+    {% load static %}
+    <img class="login_img" src="{% static '/logo.png' %}" alt="logo">
 </div>
 <div>
     <h1>Welcome to Beach House Analytics!!</h1>

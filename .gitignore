@@ -1,0 +1,5 @@
+/BH_DJANGO/Static_File_Storage/census_info_beachhouse.csv
+/BH_DJANGO/Static_File_Storage/Flash_Changes.csv
+/BH_DJANGO/.gitignore
+/BH_DJANGO/.env
+/BH_DJANGO/pages/sftp_transfer.py

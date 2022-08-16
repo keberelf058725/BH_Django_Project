@@ -17,6 +17,10 @@ from requests import post
 
 pandas.options.mode.chained_assignment = None
 
+census_path = '/home/beachhouse/PycharmProjects/BH_Django_Project/BH_DJANGO/Static_File_Storage/census_info_beachhouse.csv'
+
+flash_path = '/home/beachhouse/PycharmProjects/BH_Django_Project/BH_DJANGO/Static_File_Storage/Flash_Changes.csv'
+
 def logout_user(request):
     auth.logout(request)
     return redirect('login')
@@ -40,7 +44,7 @@ def homepage_view(request, *args, **kwargs):
             )
 
             t = datetime.today() - timedelta(days=3)
-            df = pandas.read_csv(static('census_info_beachhouse.csv'))
+            df = pandas.read_csv(census_path)
             df[['Therapist', 'trash']] = df.primarycareteam_primarytherapist.str.split(' ', n=1, expand=True)
             df[['DOC', 'trash.1']] = df.diagcodename_list.str.split(' ', n=1, expand=True)
             df['LNF3'] = df['last_name'].str.slice(stop=3)
@@ -72,7 +76,7 @@ def homepage_view(request, *args, **kwargs):
                 content_type='text/csv',
                 headers={'Content-Disposition': 'attachment; filename="Caseload.csv"'},
             )
-            df2_dl = pandas.read_csv(static('census_info_beachhouse.csv'))
+            df2_dl = pandas.read_csv(census_path)
             df2_dl[['Therapist', 'trash']] = df2_dl.primarycareteam_primarytherapist.str.split(' ', n=1, expand=True)
             df2_dl['Therapist'] = df2_dl['Therapist'].replace(['Did'], 'No Assigned Therapist')
             df2_dl['LNF3'] = df2_dl['last_name'].str.slice(stop=3)
@@ -92,8 +96,8 @@ def homepage_view(request, *args, **kwargs):
 
     if request.method == 'GET':
         t = datetime.today() - timedelta(days=3)
-        df = pandas.read_csv(static('census_info_beachhouse.csv'))
-        df2 = pandas.read_csv(static('census_info_beachhouse.csv'))
+        df = pandas.read_csv(census_path)
+        df2 = pandas.read_csv(census_path)
         df2[['Therapist', 'trash']] = df2.primarycareteam_primarytherapist.str.split(' ', n=1, expand=True)
         df2['Therapist'] = df2['Therapist'].replace(['Did'], 'No Assigned Therapist')
         df2 = df2[['Therapist']]
@@ -392,7 +396,7 @@ def flash_report_tools_view(request, *args, **kwargs):
         return render(request, 'flash_tools.html', {})
 
     if request.method == 'GET':
-        df = pandas.read_csv(static('Flash_Changes.csv'))
+        df = pandas.read_csv(flash_path)
         df = df[['Patient', 'Change', 'LOC_Change', 'Commit_LOS']]
         json_records = df.reset_index().to_json(orient='records')
         # data = []
@@ -400,4 +404,5 @@ def flash_report_tools_view(request, *args, **kwargs):
         context = {'d': data}
 
     return render(request, 'flash_tools.html', context)
+
 

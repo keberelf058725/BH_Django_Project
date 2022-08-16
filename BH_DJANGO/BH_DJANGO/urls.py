@@ -32,3 +32,4 @@ urlpatterns = [
     path('flash_tools/', views.flash_report_tools_view, name='flash_tools'),
 
 ]
+              #+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
