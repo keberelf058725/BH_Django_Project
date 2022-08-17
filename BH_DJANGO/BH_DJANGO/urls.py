@@ -30,6 +30,16 @@ urlpatterns = [
     path('clinical/', views.clinical_dc_view, name='clinical'),
     path('cl_dc_dl/', views.cl_dc_dl_view, name='cl_dc_dl'),
     path('flash_tools/', views.flash_report_tools_view, name='flash_tools'),
+    path("register", views.register_request, name="register"),
+    path('password_reset/done/',
+         auth_views.PasswordResetDoneView.as_view(template_name='password/password_reset_done.html'),
+         name='password_reset_done'),
+    path('reset/<uidb64>/<token>/',
+         auth_views.PasswordResetConfirmView.as_view(template_name="password/password_reset_confirm.html"),
+         name='password_reset_confirm'),
+    path('reset/done/',
+         auth_views.PasswordResetCompleteView.as_view(template_name='password/password_reset_complete.html'),
+         name='password_reset_complete'),
+    path("password_reset", views.password_reset_request, name="password_reset")
 
 ]
-              #+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -81,6 +81,9 @@
                         {% if user.is_superuser %}
                         <li><a class="dropdown-item" href="{% url 'admin:index' %}">Admin</a></li>
                         {% endif %}
+                        {% if user.is_superuser %}
+                        <li><a class="dropdown-item" href="{% url 'register' %}">New User</a></li>
+                        {% endif %}
                     </ul>
                 </li>
             </ul>

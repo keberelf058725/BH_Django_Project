@@ -12,18 +12,81 @@ import json
 from django.templatetags.static import static
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
-from .graphs import return_graph_LOC, return_graph_AGE, return_graph_gender,return_graph_DOC
+from .graphs import return_graph_LOC, return_graph_AGE, return_graph_gender, return_graph_DOC
 from requests import post
+from django.shortcuts import render, redirect
+from .forms import NewUserForm
+from django.contrib.auth import login
+from django.contrib import messages
+from django.shortcuts import render, redirect
+from django.core.mail import send_mail, BadHeaderError
+from django.http import HttpResponse
+from django.contrib.auth.forms import PasswordResetForm
+from django.contrib.auth.models import User
+from django.template.loader import render_to_string
+from django.db.models.query_utils import Q
+from django.utils.http import urlsafe_base64_encode
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.encoding import force_bytes
 
 pandas.options.mode.chained_assignment = None
 
-census_path = '/home/beachhouse/PycharmProjects/BH_Django_Project/BH_DJANGO/Static_File_Storage/census_info_beachhouse.csv'
+# production
+# census_path = '/home/beachhouse/PycharmProjects/BH_Django_Project/BH_DJANGO/Static_File_Storage/census_info_beachhouse.csv'
+# flash_path = '/home/beachhouse/PycharmProjects/BH_Django_Project/BH_DJANGO/Static_File_Storage/Flash_Changes.csv'
 
-flash_path = '/home/beachhouse/PycharmProjects/BH_Django_Project/BH_DJANGO/Static_File_Storage/Flash_Changes.csv'
+
+# development
+census_path = static('census_info_beachhouse.csv')
+flash_path = static('Flash_Changes.csv')
+
 
 def logout_user(request):
     auth.logout(request)
     return redirect('login')
+
+
+def register_request(request):
+    if request.method == "POST":
+        form = NewUserForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            messages.success(request, "Registration successful.")
+            return redirect("home")
+        messages.error(request, "Unsuccessful registration. Invalid information.")
+    form = NewUserForm()
+    return render(request=request, template_name="register_user.html", context={"register_form": form})
+
+
+def password_reset_request(request):
+    if request.method == "POST":
+        password_reset_form = PasswordResetForm(request.POST)
+        if password_reset_form.is_valid():
+            data = password_reset_form.cleaned_data['email']
+            associated_users = User.objects.filter(Q(email=data))
+            if associated_users.exists():
+                for user in associated_users:
+                    subject = "Password Reset Requested"
+                    email_template_name = "password/password_reset_email.txt"
+                    c = {
+                        "email": user.email,
+                        'domain': '127.0.0.1:8000',
+                        'site_name': 'Website',
+                        "uid": urlsafe_base64_encode(force_bytes(user.pk)),
+                        "user": user,
+                        'token': default_token_generator.make_token(user),
+                        'protocol': 'http',
+                    }
+                    email = render_to_string(email_template_name, c)
+                    try:
+                        send_mail(subject, email, 'myresumeonlinekcjr@gmail.com', [user.email], fail_silently=True)
+                    except BadHeaderError:
+                        return HttpResponse('Invalid header found.')
+                    return redirect("/password_reset/done/")
+    password_reset_form = PasswordResetForm()
+    return render(request=request, template_name="password/password_reset.html",
+                  context={"password_reset_form": password_reset_form})
 
 
 @login_required
@@ -33,11 +96,9 @@ def viv_help_view(request, *args, **kwargs):
 
 @login_required
 def homepage_view(request, *args, **kwargs):
-
     if request.method == 'POST':
 
         if 'recent_ad' in request.POST:
-
             response = HttpResponse(
                 content_type='text/csv',
                 headers={'Content-Disposition': 'attachment; filename="recentadmits.csv"'},
@@ -92,8 +153,6 @@ def homepage_view(request, *args, **kwargs):
 
             return response
 
-
-
     if request.method == 'GET':
         t = datetime.today() - timedelta(days=3)
         df = pandas.read_csv(census_path)
@@ -137,8 +196,6 @@ def homepage_view(request, *args, **kwargs):
         context['chart_Age'] = return_graph_AGE()
         context['chart_DOC'] = return_graph_DOC()
 
-
-
     return render(request, "home.html", context)
 
 
@@ -146,7 +203,7 @@ def homepage_view(request, *args, **kwargs):
 @permission_required('pages.view_nurse', raise_exception=True)
 def viv_view(request, *args, **kwargs):
     if request.method == 'POST':
-        form = Vivitrol_Form(request.POST,request.FILES)
+        form = Vivitrol_Form(request.POST, request.FILES)
         if form.is_valid():
             try:
                 sheet1 = request.FILES['Viv_File']
@@ -164,8 +221,9 @@ def viv_view(request, *args, **kwargs):
                 messages.error(request, 'Unknown Columns Detected: Operation Cancelled')
             else:
                 messages.success(request,
-                             'The total number of Vivitrol Injections from {} to {} is: {}'.format(Date_Min, Date_Max,
-                                                                                                   VivT))
+                                 'The total number of Vivitrol Injections from {} to {} is: {}'.format(Date_Min,
+                                                                                                       Date_Max,
+                                                                                                       VivT))
 
             return render(request, "viv.html", {})
     else:
@@ -177,7 +235,7 @@ def viv_view(request, *args, **kwargs):
 @login_required
 def flash_view(request, *args, **kwargs):
     if request.method == 'POST':
-        form = Flash_File_Form(request.POST,request.FILES)
+        form = Flash_File_Form(request.POST, request.FILES)
 
         if form.is_valid():
             try:
@@ -202,7 +260,8 @@ def flash_view(request, *args, **kwargs):
                 DL_Flash['Name_2'] = DL_Flash.loc[:, 'First Name'] + ' ' + DL_Flash.loc[:, 'LNF2']
                 DL_Flash['Name'] = DL_Flash.loc[:, 'First Name'] + ' ' + DL_Flash.loc[:, 'Last Name']
                 DL_Flash = DL_Flash[
-                    ['Name', 'MR', 'Sex', 'Insurance 1   Insurance Company', 'Admission Date', 'Length Of Stay', 'Program',
+                    ['Name', 'MR', 'Sex', 'Insurance 1   Insurance Company', 'Admission Date', 'Length Of Stay',
+                     'Program',
                      'Payment Method', 'LNF3', 'LNF2', 'Name_3', 'Name_2']]
                 M_D = pandas.merge(DL_Flash, Actual_Flash, how="left", left_on=["Name_3"], right_on=["Patient"],
                                    suffixes=("", ".Flash"))
@@ -262,7 +321,8 @@ def clinical_dc_view(request, *args, **kwargs):
                     DC2 = DC[(DC['Discharge Date'] >= Month_Start) & (DC['Discharge Date'] < Month_End)]
                     # Replace ADMIN DC TYPES
                     DC2['Discharge Type'] = DC2['Discharge Type'].replace(
-                    ['ADMINISTRATIVE – NO SHOW', "ADMINISTRATIVE – BEHAVIORAL ","ADMINISTRATIVE – BEHAVIORAL" , 'ADMINISTRATIVE – LEGAL'], 'ADMIN DC')
+                        ['ADMINISTRATIVE – NO SHOW', "ADMINISTRATIVE – BEHAVIORAL ", "ADMINISTRATIVE – BEHAVIORAL",
+                         'ADMINISTRATIVE – LEGAL'], 'ADMIN DC')
                     # REPLACE DETOX/STAB ONLY TYPES
                     DC2['Discharge Type'] = DC2['Discharge Type'].replace(['DETOX COMPLETE', 'STABILIZATION ONLY'],
                                                                           'DETOX/STAB ONLY')
@@ -270,8 +330,10 @@ def clinical_dc_view(request, *args, **kwargs):
                     DC3 = DC2[DC2['Discharge Type'].str.contains('PRE-ADMISSION') == False]
                     # Grab only needed Columns
                     ALOS1 = ALOS[
-                            ['MR#', 'Admission Date', 'Discharge Date', 'Detox Actual', 'Residential Actual', 'PHP/Day-Night Actual',
-                            'IOP Actual', 'IIP Actual', 'PHP/Day-Night Treatment with Community Housing Actual', 'Length of Stay']]
+                        ['MR#', 'Admission Date', 'Discharge Date', 'Detox Actual', 'Residential Actual',
+                         'PHP/Day-Night Actual',
+                         'IOP Actual', 'IIP Actual', 'PHP/Day-Night Treatment with Community Housing Actual',
+                         'Length of Stay']]
                     # drop rows with null values
                     ALOS2 = ALOS1.dropna()
                     # Change DC Date to Date/Time
@@ -287,7 +349,8 @@ def clinical_dc_view(request, *args, **kwargs):
                     MRG['Stage 1 LOS'] = MRG.loc[:, ['Detox Actual', 'Residential Actual', 'IIP Actual']].sum(axis=1)
                     # SUM PHP COLUMNS
                     MRG['PHP Actual'] = MRG.loc[:,
-                                        ['PHP/Day-Night Actual', 'PHP/Day-Night Treatment with Community Housing Actual']].sum(
+                                        ['PHP/Day-Night Actual',
+                                         'PHP/Day-Night Treatment with Community Housing Actual']].sum(
                         axis=1)
                     # CREATE STAGE 2 COLUMNS
                     MRG['Stage 2 LOS'] = MRG.loc[:, ['PHP Actual', 'IOP Actual']].sum(axis=1)
@@ -297,17 +360,21 @@ def clinical_dc_view(request, *args, **kwargs):
                     MRG['PHP Conversion'] = numpy.where(MRG['PHP Actual'] > 0, 'Converted', 'Unconverted')
                     MRG['IOP Actual'] = pandas.to_numeric(MRG['IOP Actual'])
                     MRG['IOP Conversion'] = numpy.where(MRG['IOP Actual'] > 0, 'Converted', 'Unconverted')
-                    MRG['Stage 1 to PHP Conversion'] = numpy.where((MRG['Stage 1 LOS'] > 0) & (MRG['PHP Actual'] > 0), 'Converted',
+                    MRG['Stage 1 to PHP Conversion'] = numpy.where((MRG['Stage 1 LOS'] > 0) & (MRG['PHP Actual'] > 0),
+                                                                   'Converted',
                                                                    'Unconverted')
                     MRG['HELPER'] = MRG.loc[:, ['Stage 1 LOS', 'PHP Actual']].sum(axis=1)
-                    MRG['Stage 1 to IOP Conversion'] = numpy.where((MRG['IOP Actual'] > 0) & (MRG['HELPER'] > 0), 'Converted',
+                    MRG['Stage 1 to IOP Conversion'] = numpy.where((MRG['IOP Actual'] > 0) & (MRG['HELPER'] > 0),
+                                                                   'Converted',
                                                                    'Unconverted')
-                    MRG['PHP into IOP Conversion'] = numpy.where((MRG['IOP Actual'] > 0) & (MRG['PHP Actual'] > 0), 'Converted',
+                    MRG['PHP into IOP Conversion'] = numpy.where((MRG['IOP Actual'] > 0) & (MRG['PHP Actual'] > 0),
+                                                                 'Converted',
                                                                  'Unconverted')
                     MRG[['Statuses_1', 'Statuses_2']] = MRG.Statuses.str.split(';', n=1, expand=True)
                     MRG['Stage_1_Therapist'] = numpy.where(MRG.loc[:, ('Statuses_2')].str.contains("Campus Therapist"),
                                                            MRG.loc[:, ('Statuses_2')], MRG.loc[:, ('Statuses_1')])
-                    MRG[['Stage_1_Therapist_1', 'Stage_1_Therapist_2']] = MRG.Stage_1_Therapist.str.split(': ', n=1, expand=True)
+                    MRG[['Stage_1_Therapist_1', 'Stage_1_Therapist_2']] = MRG.Stage_1_Therapist.str.split(': ', n=1,
+                                                                                                          expand=True)
                     MRG[['Stage_1', 'Stage_1_Therapist_4']] = MRG.Stage_1_Therapist_2.str.split(',', n=1, expand=True)
                     MRG[['Stage_2', 'Stage_2_Eronious']] = MRG['Primary Therapist'].str.split(',', n=1, expand=True)
                     MRG['DCDATE_COPY'] = MRG['Discharge Date'].astype(str)
@@ -316,29 +383,40 @@ def clinical_dc_view(request, *args, **kwargs):
                     MRG['DC_Month'] = MRG.loc[:, ('DCM')].astype(str) + MRG.loc[:, ('DCYT')].astype(str)
                     MRG['Admit_Yr'] = MRG.loc[:, ('DCYEAR')]
                     MRG['Admit_Yr_Filter'] = MRG.loc[:, ('DCYEAR')]
-                    MRG['RELAPSE'] = numpy.where((MRG['PHP Actual'] > 0) & ((MRG['Program'].str.contains("4 - Residential")) | (
-                        MRG['Program'].str.contains("4 - Residential"))), "True", "False")
-                    MRG['Include_on_Campus1'] = numpy.where(MRG['Stage 2 Conversion'].str.contains("Unconverted"), "Y", "N")
+                    MRG['RELAPSE'] = numpy.where(
+                        (MRG['PHP Actual'] > 0) & ((MRG['Program'].str.contains("4 - Residential")) | (
+                            MRG['Program'].str.contains("4 - Residential"))), "True", "False")
+                    MRG['Include_on_Campus1'] = numpy.where(MRG['Stage 2 Conversion'].str.contains("Unconverted"), "Y",
+                                                            "N")
                     MRG['Include_on_Campus'] = numpy.where(MRG['RELAPSE'].str.contains("True"), "Y",
                                                            MRG.loc[:, ('Include_on_Campus1')])
                     MRG1 = MRG[
-                        ['First Name', 'Last Name', 'MR', 'Insurance 1   Insurance Company', 'Discharge Type', 'Admission Date',
-                         'Discharge Date', 'DC_Month', 'Length Of Stay', 'Detox Actual', 'IIP Actual', 'Residential Actual',
+                        ['First Name', 'Last Name', 'MR', 'Insurance 1   Insurance Company', 'Discharge Type',
+                         'Admission Date',
+                         'Discharge Date', 'DC_Month', 'Length Of Stay', 'Detox Actual', 'IIP Actual',
+                         'Residential Actual',
                          'Stage 1 LOS', 'PHP Actual', 'IOP Actual', 'Stage 2 LOS', 'TOTAL LOS', 'Stage 2 Conversion',
                          'PHP Conversion', 'IOP Conversion', 'Stage 1 to PHP Conversion', 'Stage 1 to IOP Conversion',
-                         'PHP into IOP Conversion', 'UR LOS', 'Stage_1', 'Stage_2', 'Program', 'Payment Method', 'Admit_Yr',
+                         'PHP into IOP Conversion', 'UR LOS', 'Stage_1', 'Stage_2', 'Program', 'Payment Method',
+                         'Admit_Yr',
                          'Admit_Yr_Filter', 'RELAPSE', 'Include_on_Campus']]
                     TR = pandas.DataFrame(pandas.read_excel(T_L))
-                    MRG2 = pandas.merge(MRG1, TR, how="left", left_on=["Stage_1"], right_on=["Full Name"], suffixes=("", "_TR"))
-                    MRG3 = pandas.merge(MRG2, TR, how="left", left_on=["Stage_2"], right_on=["Full Name"], suffixes=("", "_TR"))
+                    MRG2 = pandas.merge(MRG1, TR, how="left", left_on=["Stage_1"], right_on=["Full Name"],
+                                        suffixes=("", "_TR"))
+                    MRG3 = pandas.merge(MRG2, TR, how="left", left_on=["Stage_2"], right_on=["Full Name"],
+                                        suffixes=("", "_TR"))
                     MRG3.rename(columns={'Therapist': 'S1 Therapist', 'Therapist_TR': 'S2 Therapist'}, inplace=True)
-                    MRG3[['S1 Therapist', 'S2 Therapist']] = MRG3[['S1 Therapist', 'S2 Therapist']].fillna('Former Employee')
+                    MRG3[['S1 Therapist', 'S2 Therapist']] = MRG3[['S1 Therapist', 'S2 Therapist']].fillna(
+                        'Former Employee')
                     Final_Preped_Data = MRG3[
-                        ['First Name', 'Last Name', 'MR', 'Insurance 1   Insurance Company', 'Discharge Type', 'Admission Date',
-                         'Discharge Date', 'DC_Month', 'Length Of Stay', 'Detox Actual', 'IIP Actual', 'Residential Actual',
+                        ['First Name', 'Last Name', 'MR', 'Insurance 1   Insurance Company', 'Discharge Type',
+                         'Admission Date',
+                         'Discharge Date', 'DC_Month', 'Length Of Stay', 'Detox Actual', 'IIP Actual',
+                         'Residential Actual',
                          'Stage 1 LOS', 'PHP Actual', 'IOP Actual', 'Stage 2 LOS', 'TOTAL LOS', 'Stage 2 Conversion',
                          'PHP Conversion', 'IOP Conversion', 'Stage 1 to PHP Conversion', 'Stage 1 to IOP Conversion',
-                         'PHP into IOP Conversion', 'UR LOS', 'S1 Therapist', 'S2 Therapist', 'Program', 'Payment Method',
+                         'PHP into IOP Conversion', 'UR LOS', 'S1 Therapist', 'S2 Therapist', 'Program',
+                         'Payment Method',
                          'Admit_Yr', 'Admit_Yr_Filter', 'RELAPSE', 'Include_on_Campus']]
                 except Exception:
                     messages.error(request, 'Unknown Columns Detected: Operation Cancelled')
@@ -351,7 +429,6 @@ def clinical_dc_view(request, *args, **kwargs):
                 messages.error(request, 'One or more fields contained errors')
 
         if 'cl_dl' in request.POST:
-
             df = pandas.read_pickle("./df.pkl")
 
             LM = (pandas.Period(datetime.now(), 'M') - 1).strftime('%B')
@@ -370,16 +447,18 @@ def clinical_dc_view(request, *args, **kwargs):
 
     return render(request, 'clinical.html', {'form': form})
 
+
 @login_required
 def cl_dc_dl_view(request, *args, **kwargs):
     return render(request, 'cl_dc_dl.html', {})
+
 
 @login_required
 def flash_report_tools_view(request, *args, **kwargs):
     if request.method == 'POST':
         if 'report_refresh' in request.POST:
-
-            requests.post('https://prod-176.westus.logic.azure.com:443/workflows/ea291131ff8a4a2f919d0f854a31a4ec/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=E68W4i4IA8AWzu4TSyBaxcVZipma60B5Nd_lUGGVbVg')
+            requests.post(
+                'https://prod-176.westus.logic.azure.com:443/workflows/ea291131ff8a4a2f919d0f854a31a4ec/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=E68W4i4IA8AWzu4TSyBaxcVZipma60B5Nd_lUGGVbVg')
 
         if 'fl_changes' in request.POST:
             response = HttpResponse(
@@ -387,7 +466,7 @@ def flash_report_tools_view(request, *args, **kwargs):
                 headers={'Content-Disposition': 'attachment; filename="yesterday_census_changes.csv"'},
             )
 
-            df = pandas.read_csv(static('Flash_Changes.csv'))
+            df = pandas.read_csv(flash_path)
 
             df.to_csv(path_or_buf=response, float_format='%.4f', index=False, decimal=".")
 
@@ -404,5 +483,3 @@ def flash_report_tools_view(request, *args, **kwargs):
         context = {'d': data}
 
     return render(request, 'flash_tools.html', context)
-
-

@@ -10,9 +10,17 @@ from django.templatetags.static import static
 DOC_color = 'seagreen'
 lbcolor = '#000000'
 
-census_path = '/home/beachhouse/PycharmProjects/BH_Django_Project/BH_DJANGO/Static_File_Storage/census_info_beachhouse.csv'
 
-flash_path = '/home/beachhouse/PycharmProjects/BH_Django_Project/BH_DJANGO/Static_File_Storage/Flash_Changes.csv'
+#production
+#census_path = '/home/beachhouse/PycharmProjects/BH_Django_Project/BH_DJANGO/Static_File_Storage/census_info_beachhouse.csv'
+#flash_path = '/home/beachhouse/PycharmProjects/BH_Django_Project/BH_DJANGO/Static_File_Storage/Flash_Changes.csv'
+
+
+#development
+census_path = static('census_info_beachhouse.csv')
+flash_path = static('Flash_Changes.csv')
+
+
 
 def return_graph_LOC():
     plt.rcParams['figure.figsize'] = (5, 3)
