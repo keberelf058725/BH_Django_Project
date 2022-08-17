@@ -32,13 +32,13 @@ from django.utils.encoding import force_bytes
 pandas.options.mode.chained_assignment = None
 
 # production
-# census_path = '/home/beachhouse/PycharmProjects/BH_Django_Project/BH_DJANGO/Static_File_Storage/census_info_beachhouse.csv'
-# flash_path = '/home/beachhouse/PycharmProjects/BH_Django_Project/BH_DJANGO/Static_File_Storage/Flash_Changes.csv'
+census_path = '/home/beachhouse/PycharmProjects/BH_Django_Project/BH_DJANGO/Static_File_Storage/census_info_beachhouse.csv'
+flash_path = '/home/beachhouse/PycharmProjects/BH_Django_Project/BH_DJANGO/Static_File_Storage/Flash_Changes.csv'
 
 
 # development
-census_path = static('census_info_beachhouse.csv')
-flash_path = static('Flash_Changes.csv')
+#census_path = static('census_info_beachhouse.csv')
+#flash_path = static('Flash_Changes.csv')
 
 
 def logout_user(request):
@@ -71,8 +71,8 @@ def password_reset_request(request):
                     email_template_name = "password/password_reset_email.txt"
                     c = {
                         "email": user.email,
-                        'domain': '127.0.0.1:8000',
-                        'site_name': 'Website',
+                        'domain': '192.168.201.185',
+                        'site_name': 'Beach House Analytics',
                         "uid": urlsafe_base64_encode(force_bytes(user.pk)),
                         "user": user,
                         'token': default_token_generator.make_token(user),
@@ -80,7 +80,7 @@ def password_reset_request(request):
                     }
                     email = render_to_string(email_template_name, c)
                     try:
-                        send_mail(subject, email, 'myresumeonlinekcjr@gmail.com', [user.email], fail_silently=True)
+                        send_mail(subject, email, 'kevincaldon@beachhousecenter.com', [user.email], fail_silently=True)
                     except BadHeaderError:
                         return HttpResponse('Invalid header found.')
                     return redirect("/password_reset/done/")

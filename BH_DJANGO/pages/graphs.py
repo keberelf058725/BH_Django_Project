@@ -12,13 +12,13 @@ lbcolor = '#000000'
 
 
 #production
-#census_path = '/home/beachhouse/PycharmProjects/BH_Django_Project/BH_DJANGO/Static_File_Storage/census_info_beachhouse.csv'
-#flash_path = '/home/beachhouse/PycharmProjects/BH_Django_Project/BH_DJANGO/Static_File_Storage/Flash_Changes.csv'
+census_path = '/home/beachhouse/PycharmProjects/BH_Django_Project/BH_DJANGO/Static_File_Storage/census_info_beachhouse.csv'
+flash_path = '/home/beachhouse/PycharmProjects/BH_Django_Project/BH_DJANGO/Static_File_Storage/Flash_Changes.csv'
 
 
 #development
-census_path = static('census_info_beachhouse.csv')
-flash_path = static('Flash_Changes.csv')
+#census_path = static('census_info_beachhouse.csv')
+#flash_path = static('Flash_Changes.csv')
 
 
 
