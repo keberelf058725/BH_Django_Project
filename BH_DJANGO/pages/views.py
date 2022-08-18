@@ -79,6 +79,7 @@ def register_request(request):
             flash_model.save()
             form.save()
 
+
             return redirect("home")
         messages.error(request, "Unsuccessful registration. Invalid information.")
     form = NewUserForm()
@@ -509,3 +510,6 @@ def flash_report_tools_view(request, *args, **kwargs):
         context = {'d': data}
 
     return render(request, 'flash_tools.html', context)
+
+def unsub_view(request, *args, **kwargs):
+    return render(request, 'unsub.html', {})
