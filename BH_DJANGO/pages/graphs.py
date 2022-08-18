@@ -6,19 +6,14 @@ from io import StringIO
 import pandas
 import numpy
 from django.templatetags.static import static
+from .file_source import census_path_to_file, flash_path_to_file
 
 DOC_color = 'seagreen'
 lbcolor = '#000000'
 
+census_path = census_path_to_file
+flash_path = flash_path_to_file
 
-#production
-#census_path = '/home/beachhouse/PycharmProjects/BH_Django_Project/BH_DJANGO/Static_File_Storage/census_info_beachhouse.csv'
-#flash_path = '/home/beachhouse/PycharmProjects/BH_Django_Project/BH_DJANGO/Static_File_Storage/Flash_Changes.csv'
-
-
-#development
-census_path = static('census_info_beachhouse.csv')
-flash_path = static('Flash_Changes.csv')
 
 
 

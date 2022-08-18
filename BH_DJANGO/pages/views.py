@@ -33,10 +33,6 @@ from .file_source import census_path_to_file, flash_path_to_file
 
 pandas.options.mode.chained_assignment = None
 
-# production
-#census_path = '/home/beachhouse/PycharmProjects/BH_Django_Project/BH_DJANGO/Static_File_Storage/census_info_beachhouse.csv'
-#flash_path = '/home/beachhouse/PycharmProjects/BH_Django_Project/BH_DJANGO/Static_File_Storage/Flash_Changes.csv'
-
 
 census_path = census_path_to_file
 flash_path = flash_path_to_file
