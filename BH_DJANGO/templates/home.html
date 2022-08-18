@@ -67,6 +67,7 @@
             <div class="chart_2row" style="grid-area: Text">{{chart_G|safe}}</div>
             <div class="chart_1row" style="grid-area: bottom">{{chart_Age|safe}}</div>
             <div class="chart_3row" style="grid-area: rowthree">{{chart_DOC|safe}}</div>
+            {% if perms.pages.view_therapist %}
             <div class="container2" style="grid-area: chart2">
                 <table id="table2" class="table table-Default table-hover table-bordered table-sm">
                     <h2> Therapist Caseload</h2>
@@ -94,7 +95,7 @@
                     {% endif %}
                     </tbody>
                 </table>
-            </div>
+            </div> {% endif %}
         </div>
     </div>
 </div>
