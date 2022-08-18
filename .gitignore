@@ -3,3 +3,5 @@
 /BH_DJANGO/.gitignore
 /BH_DJANGO/.env
 /BH_DJANGO/pages/sftp_transfer.py
+/BH_DJANGO/db.sqlite3
+/BH_DJANGO/BH_DJANGO/settings.py
