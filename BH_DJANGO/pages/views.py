@@ -28,17 +28,18 @@ from django.db.models.query_utils import Q
 from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
+from .models import Nurse, Admin, Flash_User, Therapist
 
 pandas.options.mode.chained_assignment = None
 
 # production
-census_path = '/home/beachhouse/PycharmProjects/BH_Django_Project/BH_DJANGO/Static_File_Storage/census_info_beachhouse.csv'
-flash_path = '/home/beachhouse/PycharmProjects/BH_Django_Project/BH_DJANGO/Static_File_Storage/Flash_Changes.csv'
+#census_path = '/home/beachhouse/PycharmProjects/BH_Django_Project/BH_DJANGO/Static_File_Storage/census_info_beachhouse.csv'
+#flash_path = '/home/beachhouse/PycharmProjects/BH_Django_Project/BH_DJANGO/Static_File_Storage/Flash_Changes.csv'
 
 
 # development
-#census_path = static('census_info_beachhouse.csv')
-#flash_path = static('Flash_Changes.csv')
+census_path = static('census_info_beachhouse.csv')
+flash_path = static('Flash_Changes.csv')
 
 
 def logout_user(request):
@@ -51,8 +52,33 @@ def register_request(request):
         form = NewUserForm(request.POST)
         if form.is_valid():
             user = form.save()
-            login(request, user)
-            messages.success(request, "Registration successful.")
+            nurse = form.cleaned_data['Nurse']
+            therapist = form.cleaned_data['Therapist']
+            admin = form.cleaned_data['Admin']
+            flash_user = form.cleaned_data['Flash_User']
+
+            nurse_model = Nurse()
+            nurse_model.user = user
+            nurse_model.Nurse = nurse
+
+            therapist_model = Therapist()
+            therapist_model.user = user
+            therapist_model.Therapist = therapist
+
+            admin_model = Admin()
+            admin_model.user = user
+            admin_model.Admin = admin
+
+            flash_model = Flash_User()
+            flash_model.user = user
+            flash_model.Flash_User = flash_user
+
+            nurse_model.save()
+            therapist_model.save()
+            admin_model.save()
+            flash_model.save()
+            form.save()
+
             return redirect("home")
         messages.error(request, "Unsuccessful registration. Invalid information.")
     form = NewUserForm()

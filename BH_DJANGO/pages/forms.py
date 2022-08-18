@@ -4,6 +4,8 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
 
+
+
 class Flash_File_Form(forms.Form):
     Flash_File = forms.FileField(label='Flash File', validators=[FileExtensionValidator(allowed_extensions=['xlsx'])])
     Kipu_File = forms.FileField(label='Kipu File', validators=[FileExtensionValidator(allowed_extensions=['csv'])])
@@ -34,10 +36,15 @@ class Vivitrol_Form(forms.Form):
 
 class NewUserForm(UserCreationForm):
     email = forms.EmailField(required=True)
+    Nurse = forms.BooleanField(required=False)
+    Therapist = forms.BooleanField(required=False)
+    Admin = forms.BooleanField(required=False)
+    Flash_User = forms.BooleanField(required=False)
 
     class Meta:
         model = User
         fields = ("username", "email", "password1", "password2")
+
 
     def save(self, commit=True):
         user = super(NewUserForm, self).save(commit=False)
