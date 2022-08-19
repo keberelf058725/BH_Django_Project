@@ -75,6 +75,20 @@ def register_request(request):
             flash_model.save()
             form.save()
 
+            subject = "Access to BH Analytics Granted"
+            email_template_name = "password/new_user_setup.txt"
+            c = {
+                "email": user.email,
+                'domain': '192.168.201.185',
+                'site_name': 'Beach House Analytics',
+                "uid": urlsafe_base64_encode(force_bytes(user.pk)),
+                "user": user,
+                'token': default_token_generator.make_token(user),
+                'protocol': 'http',
+            }
+            email = render_to_string(email_template_name, c)
+
+            send_mail(subject, email, 'kevincaldon@beachhousecenter.com', [user.email], fail_silently=True)
 
             return redirect("home")
         messages.error(request, "Unsuccessful registration. Invalid information.")

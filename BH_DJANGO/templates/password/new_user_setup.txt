@@ -1,0 +1,19 @@
+{% autoescape off %}
+Hello,
+
+You have been granted access to our Beach House Analytics Site. Below is your login credentials and a link that will allow you to reset your password.
+
+Username: {{ user }}
+
+{{ protocol }}://{{ domain }}{% url 'password_reset_confirm' uidb64=uid token=token %}
+
+This link can only be used once. If you need to reset your password again, please visit {{ protocol }}://{{domain}} and request another reset.
+
+This site is still in Beta testing. If you notice any issues please report them to me by submitting a help desk ticket!
+
+Sincerely,
+Kevin Caldon
+EHR Admin
+Ext. 2111
+
+{% endautoescape %}
