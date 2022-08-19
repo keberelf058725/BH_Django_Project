@@ -21,13 +21,13 @@
 <form method="post">
     {% csrf_token %}
     {{form.as_p}}
+    <p><a href="/password_reset">Forgot Password?</a>!</p>
     <input type="submit" value="Login"/>
 
 </form>
 <p class="login_text">If you have been authorized to use this system and you do not have<br>
-    login credentials please contact EHR via the Help Desk <br>
-    with Kipu in the subject line
+    login credentials please <a href="https://forms.office.com/pages/responsepage.aspx?id=oRE-s4024Eiw1DaBc2GOslEOMI0X1ylEkKi3wuQ8LG5UMk5LMlQ2MEVBNjJFVDI1UTZIRVNFQzVNMS4u" target="_blank">click here</a> to submit Help Desk <br>
+    ticket
 </p>
-<p>If you forgot your password please <a href="/password_reset">click here</a>!</p>
 </body>
 </html>

@@ -5,9 +5,9 @@ You have been granted access to our Beach House Analytics Site. Below is your lo
 
 Username: {{ user }}
 
-{{ protocol }}://{{ domain }}{% url 'password_reset_confirm' uidb64=uid token=token %}
+To set your password please click the below link, which can only be used once. If you need to reset your password again, please visit {{ protocol }}://{{domain}} and click on the "Forgot Password?" link.
 
-This link can only be used once. If you need to reset your password again, please visit {{ protocol }}://{{domain}} and request another reset.
+{{ protocol }}://{{ domain }}{% url 'password_reset_confirm' uidb64=uid token=token %}
 
 This site is still in Beta testing. If you notice any issues please report them to me by submitting a help desk ticket!
 
