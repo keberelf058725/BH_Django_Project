@@ -1,20 +1,22 @@
 import matplotlib
-
+import psycopg2
 matplotlib.use('Agg')
 from matplotlib import pyplot as plt
 from io import StringIO
+import warnings
+warnings.simplefilter(action='ignore', category=FutureWarning)
 import pandas
 import numpy
 from django.templatetags.static import static
 from .file_source import census_path_to_file, flash_path_to_file
+from .sql_cred import Database, USER, PASSWORD, HOST, PORT
+
 
 DOC_color = 'seagreen'
 lbcolor = '#000000'
 
 census_path = census_path_to_file
 flash_path = flash_path_to_file
-
-
 
 
 def return_graph_LOC():
@@ -25,7 +27,10 @@ def return_graph_LOC():
     fig, ax = plt.subplots()
 
     # pandas func
-    df = pandas.read_csv(census_path)
+    #df = pandas.read_csv(census_path)
+    conn = psycopg2.connect(database=Database, user=USER, password=PASSWORD, host=HOST, port=PORT)
+    sql_query = pandas.read_sql_query('''SELECT * FROM census_info_beachhouse''', conn)
+    df = pandas.DataFrame(sql_query)
     df['program_name'] = df['program_name'].replace(['2 Detox'], 'DTX')
     df['program_name'] = df['program_name'].replace(['4 Residential'], 'RES')
     df['program_name'] = df['program_name'].replace(['5 PHP Day Night Treatment with Community Hou'], 'PHP')
@@ -100,6 +105,7 @@ def return_graph_LOC():
     imgdata.seek(0)
 
     data = imgdata.getvalue()
+    conn.close()
     return data
 
 
@@ -109,7 +115,10 @@ def return_graph_gender():
     #fig, ax = plt.subplots(facecolor=bgcolor)
     fig, ax = plt.subplots()
     # pandas func
-    df = pandas.read_csv(census_path)
+    #df = pandas.read_csv(census_path)
+    conn = psycopg2.connect(database=Database, user=USER, password=PASSWORD, host=HOST, port=PORT)
+    sql_query = pandas.read_sql_query('''SELECT * FROM census_info_beachhouse''', conn)
+    df = pandas.DataFrame(sql_query)
     df = df[['sex']]
     df = df.value_counts().rename_axis('Gender').reset_index(name='Count of Patients')
 
@@ -144,6 +153,7 @@ def return_graph_gender():
     imgdata.seek(0)
 
     data = imgdata.getvalue()
+    conn.close()
     return data
 
 
@@ -154,7 +164,10 @@ def return_graph_AGE():
     fig, ax = plt.subplots()
 
     # pandas func
-    df = pandas.read_csv(census_path)
+    #df = pandas.read_csv(census_path)
+    conn = psycopg2.connect(database=Database, user=USER, password=PASSWORD, host=HOST, port=PORT)
+    sql_query = pandas.read_sql_query('''SELECT * FROM census_info_beachhouse''', conn)
+    df = pandas.DataFrame(sql_query)
     df = df[['age']]
     df['age_groups'] = numpy.where(df['age'] <= 25, '18-25',
                                    numpy.where((df['age'] > 25) & (df['age'] <= 35), '26-35',
@@ -227,6 +240,7 @@ def return_graph_AGE():
     imgdata.seek(0)
 
     data = imgdata.getvalue()
+    conn.close()
     return data
 
 def return_graph_DOC():
@@ -236,7 +250,10 @@ def return_graph_DOC():
     fig, ax = plt.subplots()
 
     # pandas func
-    df = pandas.read_csv(census_path)
+    #df = pandas.read_csv(census_path)
+    conn = psycopg2.connect(database=Database, user=USER, password=PASSWORD, host=HOST, port=PORT)
+    sql_query = pandas.read_sql_query('''SELECT * FROM census_info_beachhouse''', conn)
+    df = pandas.DataFrame(sql_query)
     df[['DOC', 'trash.1']] = df.diagcodename_list.str.split(' ', n=1, expand=True)
     df[['DOC', 'trash.1']] = df.DOC.str.split(',', n=1, expand=True)
     df['DOC'] = df['DOC'].replace(['Amphetamine-type'], 'Amphetamine')
@@ -306,5 +323,6 @@ def return_graph_DOC():
     imgdata.seek(0)
 
     data = imgdata.getvalue()
+    conn.close()
     return data
 

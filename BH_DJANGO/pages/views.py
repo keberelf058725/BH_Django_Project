@@ -2,6 +2,8 @@ import requests
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.contrib import messages
+import warnings
+warnings.simplefilter(action='ignore')
 import pandas
 import numpy
 from django.contrib.auth.decorators import login_required, permission_required
@@ -30,7 +32,8 @@ from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
 from .models import Nurse, Admin, Flash_User, Therapist
 from .file_source import census_path_to_file, flash_path_to_file
-
+import psycopg2
+from .sql_cred import Database, USER, PASSWORD, HOST, PORT
 pandas.options.mode.chained_assignment = None
 
 
@@ -142,7 +145,10 @@ def homepage_view(request, *args, **kwargs):
             )
 
             t = datetime.today() - timedelta(days=3)
-            df = pandas.read_csv(census_path)
+            #df = pandas.read_csv(census_path)
+            conn = psycopg2.connect(database=Database, user=USER, password=PASSWORD, host=HOST, port=PORT)
+            sql_query = pandas.read_sql_query('''SELECT * FROM census_info_beachhouse''', conn)
+            df = pandas.DataFrame(sql_query)
             df[['Therapist', 'trash']] = df.primarycareteam_primarytherapist.str.split(' ', n=1, expand=True)
             df[['DOC', 'trash.1']] = df.diagcodename_list.str.split(' ', n=1, expand=True)
             df['LNF3'] = df['last_name'].str.slice(stop=3)
@@ -166,6 +172,7 @@ def homepage_view(request, *args, **kwargs):
                 ['Name', 'mr', 'admission_date', 'program_name', 'length_of_stay', 'age', 'sex', 'DOC', 'Therapist',
                  'paymentmethod']]
             new_admissions.to_csv(path_or_buf=response, float_format='%.4f', index=False, decimal=".")
+            conn.close()
 
             return response
 
@@ -174,7 +181,10 @@ def homepage_view(request, *args, **kwargs):
                 content_type='text/csv',
                 headers={'Content-Disposition': 'attachment; filename="Caseload.csv"'},
             )
-            df2_dl = pandas.read_csv(census_path)
+            conn = psycopg2.connect(database=Database, user=USER, password=PASSWORD, host=HOST, port=PORT)
+            sql_query = pandas.read_sql_query('''SELECT * FROM census_info_beachhouse''', conn)
+            df2_dl = pandas.DataFrame(sql_query)
+            #df2_dl = pandas.read_csv(census_path)
             df2_dl[['Therapist', 'trash']] = df2_dl.primarycareteam_primarytherapist.str.split(' ', n=1, expand=True)
             df2_dl['Therapist'] = df2_dl['Therapist'].replace(['Did'], 'No Assigned Therapist')
             df2_dl['LNF3'] = df2_dl['last_name'].str.slice(stop=3)
@@ -187,13 +197,18 @@ def homepage_view(request, *args, **kwargs):
             df2_dl.rename(columns={"mr": "MRN", "program_name": "Level of Care"})
             df2_dl = df2_dl.sort_values("Therapist")
             df2_dl.to_csv(path_or_buf=response, float_format='%.4f', index=False, decimal=".")
+            conn.close()
 
             return response
 
     if request.method == 'GET':
         t = datetime.today() - timedelta(days=3)
-        df = pandas.read_csv(census_path)
-        df2 = pandas.read_csv(census_path)
+        #df = pandas.read_csv(census_path)
+        #df2 = pandas.read_csv(census_path)
+        conn = psycopg2.connect(database=Database, user=USER, password=PASSWORD, host=HOST, port=PORT)
+        sql_query = pandas.read_sql_query('''SELECT * FROM census_info_beachhouse''', conn)
+        df = pandas.DataFrame(sql_query)
+        df2 = pandas.DataFrame(sql_query)
         df2[['Therapist', 'trash']] = df2.primarycareteam_primarytherapist.str.split(' ', n=1, expand=True)
         df2['Therapist'] = df2['Therapist'].replace(['Did'], 'No Assigned Therapist')
         df2 = df2[['Therapist']]
@@ -232,6 +247,7 @@ def homepage_view(request, *args, **kwargs):
         context['chart_G'] = return_graph_gender()
         context['chart_Age'] = return_graph_AGE()
         context['chart_DOC'] = return_graph_DOC()
+        conn.close()
 
     return render(request, "home.html", context)
 
