@@ -133,8 +133,166 @@ def password_reset_request(request):
 def viv_help_view(request, *args, **kwargs):
     return render(request, "viv_help.html", {})
 
+@login_required
+def homepage_view(request, *args, **kwargs):
+    if request.method == 'POST':
+            
+        response = HttpResponse(
+            content_type='text/csv',
+            headers={'Content-Disposition': 'attachment; filename="recentadmits.csv"'},
+        )
+
+        t = datetime.today() - timedelta(days=3)
+        #df = pandas.read_csv(census_path)
+        conn = psycopg2.connect(database=Database, user=USER, password=PASSWORD, host=HOST, port=PORT)
+        sql_query = pandas.read_sql_query('''SELECT * FROM census_info_beachhouse''', conn)
+        df = pandas.DataFrame(sql_query)
+        df[['Therapist', 'trash']] = df.primarycareteam_primarytherapist.str.split(' ', n=1, expand=True)
+        df[['DOC', 'trash.1']] = df.diagcodename_list.str.split(' ', n=1, expand=True)
+        df['LNF3'] = df['last_name'].str.slice(stop=3)
+        df['Name'] = df.loc[:, 'first_name'] + ' ' + df.loc[:, 'LNF3']
+        df = df[['Name', 'mr', 'admission_date', 'program_name', 'length_of_stay', 'age', 'sex', 'DOC', 'Therapist',
+                 'paymentmethod']]
+        df['Therapist'] = df['Therapist'].replace(['Did'], 'No Assigned Therapist')
+        df['program_name'] = df['program_name'].replace(['2 Detox'], 'DTX')
+        df['program_name'] = df['program_name'].replace(['4 Residential'], 'RES')
+        df['program_name'] = df['program_name'].replace(['5 PHP'], 'PHP')
+        df['program_name'] = df['program_name'].replace(['6 IOP 5 Days'], 'IOP')
+        df['admission_date_1'] = df['admission_date']
+        df.loc[:, ('admission_date_1')] = pandas.to_datetime(df.loc[:, ('admission_date_1')])
+        new_admissions = df[(df['admission_date_1'] >= t)].sort_values(by='admission_date_1', ascending=False)
+        new_admissions[['admission_date', 'trash.2']] = df.admission_date.str.split(' ', n=1, expand=True)
+        new_admissions[['Y', 'M', 'D']] = new_admissions.admission_date.str.split('-', n=2, expand=True)
+        new_admissions['admission_date'] = new_admissions.loc[:, ('M')] + "-" + new_admissions.loc[:,
+                                                                                ('D')] + "-" + new_admissions.loc[:,
+                                                                                               ('Y')]
+        new_admissions = new_admissions[
+            ['Name', 'mr', 'admission_date', 'program_name', 'length_of_stay', 'age', 'sex', 'DOC', 'Therapist',
+             'paymentmethod']]
+        new_admissions.to_csv(path_or_buf=response, float_format='%.4f', index=False, decimal=".")
+        conn.close()
+
+        return response
+
+    if request.method == 'GET':
+        t = datetime.today() - timedelta(days=3)
+        #df = pandas.read_csv(census_path)
+        
+        conn = psycopg2.connect(database=Database, user=USER, password=PASSWORD, host=HOST, port=PORT)
+        sql_query = pandas.read_sql_query('''SELECT * FROM census_info_beachhouse''', conn)
+        df = pandas.DataFrame(sql_query)
+        df[['Therapist', 'trash']] = df.primarycareteam_primarytherapist.str.split(' ', n=1, expand=True)
+        df[['DOC', 'trash.1']] = df.diagcodename_list.str.split(' ', n=1, expand=True)
+        df['LNF3'] = df['last_name'].str.slice(stop=3)
+        df['Name'] = df.loc[:, 'first_name'] + ' ' + df.loc[:, 'LNF3']
+        df = df[['Name', 'mr', 'admission_date', 'program_name', 'length_of_stay', 'age', 'sex', 'DOC', 'Therapist',
+                 'paymentmethod']]
+        df['Therapist'] = df['Therapist'].replace(['Did'], 'No Assigned Therapist')
+        df['program_name'] = df['program_name'].replace(['2 Detox'], 'DTX')
+        df['program_name'] = df['program_name'].replace(['4 Residential'], 'RES')
+        df['program_name'] = df['program_name'].replace(['5 PHP'], 'PHP')
+        df['program_name'] = df['program_name'].replace(['6 IOP 5 Days'], 'IOP')
+        df['admission_date_1'] = df['admission_date']
+        df.loc[:, ('admission_date_1')] = pandas.to_datetime(df.loc[:, ('admission_date_1')])
+        new_admissions = df[(df['admission_date_1'] >= t)].sort_values(by='admission_date_1', ascending=False)
+        new_admissions[['admission_date', 'trash.2']] = df.admission_date.str.split(' ', n=1, expand=True)
+        new_admissions[['Y', 'M', 'D']] = new_admissions.admission_date.str.split('-', n=2, expand=True)
+        new_admissions['admission_date'] = new_admissions.loc[:, ('M')] + "-" + new_admissions.loc[:,
+                                                                                ('D')] + "-" + new_admissions.loc[:,
+                                                                                               ('Y')]
+
+        new_admissions = new_admissions[
+            ['Name', 'mr', 'admission_date', 'program_name', 'length_of_stay', 'age', 'sex', 'DOC', 'Therapist',
+             'paymentmethod']]
+        json_records = new_admissions.reset_index().to_json(orient='records')        
+
+        data = json.loads(json_records)
+        
+        context = {'d': data}
+
+
+        conn.close()
+
+        return render(request, "home_screen/home.html", context)
 
 @login_required
+def loc_view(request, *args, **kwargs):
+    if request.method == 'GET':
+        context = {}
+        context['chart_LOC'] = return_graph_LOC()
+        return render(request, "home_screen/loc.html", context)
+
+@login_required
+def gender_view(request, *args, **kwargs):
+    if request.method == 'GET':
+        context = {}
+        context['chart_G'] = return_graph_gender()
+        return render(request, "home_screen/gender.html", context)
+
+@login_required
+def age_view(request, *args, **kwargs):
+    if request.method == 'GET':
+        context = {}
+        context['chart_Age'] = return_graph_AGE()
+        return render(request, "home_screen/age.html", context)
+
+@login_required
+def doc_view(request, *args, **kwargs):
+    if request.method == 'GET':
+        context = {}
+        context['chart_DOC'] = return_graph_DOC()
+        return render(request, "home_screen/doc.html", context)
+@login_required
+def caseload_view(request, *args, **kwargs):
+    global context
+    if request.method == 'POST':
+        response = HttpResponse(
+            content_type='text/csv',
+            headers={'Content-Disposition': 'attachment; filename="Caseload.csv"'},
+        )
+        conn = psycopg2.connect(database=Database, user=USER, password=PASSWORD, host=HOST, port=PORT)
+        sql_query = pandas.read_sql_query('''SELECT * FROM census_info_beachhouse''', conn)
+        df2_dl = pandas.DataFrame(sql_query)
+        # df2_dl = pandas.read_csv(census_path)
+        df2_dl[['Therapist', 'trash']] = df2_dl.primarycareteam_primarytherapist.str.split(' ', n=1, expand=True)
+        df2_dl['Therapist'] = df2_dl['Therapist'].replace(['Did'], 'No Assigned Therapist')
+        df2_dl['LNF3'] = df2_dl['last_name'].str.slice(stop=3)
+        df2_dl['Name'] = df2_dl.loc[:, 'first_name'] + ' ' + df2_dl.loc[:, 'LNF3']
+        df2_dl['program_name'] = df2_dl['program_name'].replace(['2 Detox'], 'DTX')
+        df2_dl['program_name'] = df2_dl['program_name'].replace(['4 Residential'], 'RES')
+        df2_dl['program_name'] = df2_dl['program_name'].replace(['5 PHP'], 'PHP')
+        df2_dl['program_name'] = df2_dl['program_name'].replace(['6 IOP 5 Days'], 'IOP')
+        df2_dl = df2_dl[['Therapist', 'Name', 'mr', 'program_name']]
+        df2_dl.rename(columns={"mr": "MRN", "program_name": "Level of Care"})
+        df2_dl = df2_dl.sort_values("Therapist")
+        df2_dl.to_csv(path_or_buf=response, float_format='%.4f', index=False, decimal=".")
+        conn.close()
+
+        return response
+
+    if request.method == 'GET':
+        t = datetime.today() - timedelta(days=3)
+        conn = psycopg2.connect(database=Database, user=USER, password=PASSWORD, host=HOST, port=PORT)
+        sql_query = pandas.read_sql_query('''SELECT * FROM census_info_beachhouse''', conn)
+        df2 = pandas.DataFrame(sql_query)
+        df2[['Therapist', 'trash']] = df2.primarycareteam_primarytherapist.str.split(' ', n=1, expand=True)
+        df2['Therapist'] = df2['Therapist'].replace(['Did'], 'No Assigned Therapist')
+        df2 = df2[['Therapist']]
+        df2 = df2.value_counts().rename_axis('Therapist').reset_index(name='Count_of_Patients')
+
+
+        json_records2 = df2.reset_index().to_json(orient='records')
+
+
+        data2 = json.loads(json_records2)
+        context = {'d2': data2}
+
+        conn.close()
+
+        return render(request, "home_screen/caseload.html", context)
+
+
+"""@login_required
 def homepage_view(request, *args, **kwargs):
     if request.method == 'POST':
 
@@ -249,7 +407,7 @@ def homepage_view(request, *args, **kwargs):
         context['chart_DOC'] = return_graph_DOC()
         conn.close()
 
-    return render(request, "home.html", context)
+    return render(request, "home.html", context)"""
 
 
 @login_required

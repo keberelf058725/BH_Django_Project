@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+<html lang="en">
+<body class="home" style="background-image: url('{% static 'beach_img.jpg'%}');">
+<div>
+    <div class="grid-template">
+        <div class="grid-template">
+            <div class="filter_buttons" style="grid-area: filter">
+               <p><a href="{% url 'home' %}" class="btn btn-primary">Recent Admits</a></p>
+        <p><a href="{% url 'loc' %}" class="btn btn-primary">Level of Care</a></p>
+        <p><a href="{% url 'age' %}" class="btn btn-primary">Age</a></p>
+        <p><a href="{% url 'gender' %}" class="btn btn-primary">Gender</a></p>
+       <p> <a href="{% url 'doc' %}" class="btn btn-primary">Drug of Choice</a></p>
+       <p> <a href="{% url 'caseload' %}" class="btn btn-primary">Caseload</a></p>
+            </div>
+            <div id="context" class="container2" style="grid-area: context">
+                <table id="table2" class="table table-Default table-hover table-bordered table-sm">
+                    <h2> Therapist Caseload</h2>
+                    <caption class="therapist_caseload">
+                        <form action="" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <input name="caseload" class="btn btn-primary" type="submit" value="Download"> - Caseload
+                        </form>
+                    </caption>
+                    <thead>
+                    <tr>
+                        <th>Therapist</th>
+                        <th>Patient Count</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!-- jinja2 Technique -->
+                    {% if d2 %}
+                    {% for i in d2 %}
+                    <tr>
+                        <td>{{i.Therapist}}</td>
+                        <td>{{i.Count_of_Patients}}</td>
+                    </tr>
+                    {% endfor %}
+                    {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+
+{% endblock %}

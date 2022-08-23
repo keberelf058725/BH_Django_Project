@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+<html lang="en">
+<body class="home" style="background-image: url('{% static 'beach_img.jpg'%}');">
+<div class="grid-template">
+    <div class="filter_buttons" style="grid-area: filter;">
+        <p><a href="{% url 'home' %}" class="btn btn-primary">Recent Admits</a></p>
+        <p><a href="{% url 'loc' %}" class="btn btn-primary">Level of Care</a></p>
+        <p><a href="{% url 'age' %}" class="btn btn-primary">Age</a></p>
+        <p><a href="{% url 'gender' %}" class="btn btn-primary">Gender</a></p>
+       <p> <a href="{% url 'doc' %}" class="btn btn-primary">Drug of Choice</a></p>
+       <p> <a href="{% url 'caseload' %}" class="btn btn-primary">Caseload</a></p>
+    </div>
+
+    <div id="context" class="chart_1row" style="grid-area: context">{{chart_Age|safe}}</div>
+</div>
+</body>
+</html>
+
+
+{% endblock %}
