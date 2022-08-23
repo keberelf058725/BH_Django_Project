@@ -31,13 +31,14 @@
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent1">
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Home</a>
                 </li>
-                    {% if perms.pages.view_flash_user %}
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown2" role="button"
+                {% if perms.pages.view_flash_user %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                        data-bs-toggle="dropdown" aria-expanded="false"> Flash Report Tools </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <li>
@@ -47,30 +48,30 @@
                         </li>
                         <li class="nav-item dropdown">
                             <a class="dropdown-item" aria-current="page" href="{% url 'flash' %}">Flash Lookup</a>
+                        </li> {% endif %}
+                        </ul>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                               data-bs-toggle="dropdown" aria-expanded="false"> Excel Analysis Tools </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li>
+                                    {% if perms.pages.view_nurse %}
+                                <li class="nav-item dropdown">
+                                    <a class="dropdown-item" aria-current="page" href="{% url 'viv' %}">Vivitrol
+                                        Count</a>
+                                </li>
+                                {% endif %}
+                                <li class="nav-item dropdown">{% if user.is_superuser %}
+                                    <a class="dropdown-item" aria-current="page" href="{% url 'clinical' %}">Clinical DC
+                                        Report</a>{% endif %}
+                                </li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="#">More to come!</a></li>
+                            </ul>
                         </li>
                     </ul>
-                {% endif %}
-                    <a class="nav-link dropdown-toggle" href="#" role="button"
-                       data-bs-toggle="dropdown" aria-expanded="false"> Excel Analysis Tools </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            {% if perms.pages.view_nurse %}
-                        <li class="nav-item dropdown">
-                            <a class="dropdown-item" aria-current="page" href="{% url 'viv' %}">Vivitrol
-                                Count</a>
-                        </li>
-                        {% endif %}
-                        {% if user.is_superuser %}
-                        <li class="nav-item dropdown">
-                            <a class="dropdown-item" aria-current="page" href="{% url 'clinical' %}">Clinical DC
-                                Report</a>{% endif %}
-                        </li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-                        <li><a class="dropdown-item" href="#">More to come!</a></li>
-                    </ul>
-
-            </ul>
         </div>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
