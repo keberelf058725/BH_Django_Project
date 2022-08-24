@@ -145,7 +145,9 @@ def homepage_view(request, *args, **kwargs):
         t = datetime.today() - timedelta(days=3)
         #df = pandas.read_csv(census_path)
         conn = psycopg2.connect(database=Database, user=USER, password=PASSWORD, host=HOST, port=PORT)
-        sql_query = pandas.read_sql_query('''SELECT * FROM census_info_beachhouse''', conn)
+        sql_query = pandas.read_sql_query('''SELECT first_name, last_name,mr, admission_date,program_name,length_of_stay, age,
+         sex, diagcodename_list, primarycareteam_primarytherapist, paymentmethod
+         FROM census_info_beachhouse''', conn)
         df = pandas.DataFrame(sql_query)
         df[['Therapist', 'trash']] = df.primarycareteam_primarytherapist.str.split(' ', n=1, expand=True)
         df[['DOC', 'trash.1']] = df.diagcodename_list.str.split(' ', n=1, expand=True)
@@ -179,7 +181,8 @@ def homepage_view(request, *args, **kwargs):
         #df = pandas.read_csv(census_path)
         
         conn = psycopg2.connect(database=Database, user=USER, password=PASSWORD, host=HOST, port=PORT)
-        sql_query = pandas.read_sql_query('''SELECT * FROM census_info_beachhouse''', conn)
+        sql_query = pandas.read_sql_query('''SELECT first_name, last_name,mr, admission_date,program_name,length_of_stay, age,
+         sex, diagcodename_list, primarycareteam_primarytherapist, paymentmethod FROM census_info_beachhouse''', conn)
         df = pandas.DataFrame(sql_query)
         df[['Therapist', 'trash']] = df.primarycareteam_primarytherapist.str.split(' ', n=1, expand=True)
         df[['DOC', 'trash.1']] = df.diagcodename_list.str.split(' ', n=1, expand=True)
@@ -251,7 +254,7 @@ def caseload_view(request, *args, **kwargs):
             headers={'Content-Disposition': 'attachment; filename="Caseload.csv"'},
         )
         conn = psycopg2.connect(database=Database, user=USER, password=PASSWORD, host=HOST, port=PORT)
-        sql_query = pandas.read_sql_query('''SELECT * FROM census_info_beachhouse''', conn)
+        sql_query = pandas.read_sql_query('''SELECT first_name, last_name,mr,program_name,primarycareteam_primarytherapist FROM census_info_beachhouse''', conn)
         df2_dl = pandas.DataFrame(sql_query)
         # df2_dl = pandas.read_csv(census_path)
         df2_dl[['Therapist', 'trash']] = df2_dl.primarycareteam_primarytherapist.str.split(' ', n=1, expand=True)
@@ -273,7 +276,7 @@ def caseload_view(request, *args, **kwargs):
     if request.method == 'GET':
         t = datetime.today() - timedelta(days=3)
         conn = psycopg2.connect(database=Database, user=USER, password=PASSWORD, host=HOST, port=PORT)
-        sql_query = pandas.read_sql_query('''SELECT * FROM census_info_beachhouse''', conn)
+        sql_query = pandas.read_sql_query('''SELECT primarycareteam_primarytherapist FROM census_info_beachhouse''', conn)
         df2 = pandas.DataFrame(sql_query)
         df2[['Therapist', 'trash']] = df2.primarycareteam_primarytherapist.str.split(' ', n=1, expand=True)
         df2['Therapist'] = df2['Therapist'].replace(['Did'], 'No Assigned Therapist')

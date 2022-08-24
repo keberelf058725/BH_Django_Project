@@ -29,7 +29,7 @@ def return_graph_LOC():
     # pandas func
     #df = pandas.read_csv(census_path)
     conn = psycopg2.connect(database=Database, user=USER, password=PASSWORD, host=HOST, port=PORT)
-    sql_query = pandas.read_sql_query('''SELECT * FROM census_info_beachhouse''', conn)
+    sql_query = pandas.read_sql_query('''SELECT program_name FROM census_info_beachhouse''', conn)
     df = pandas.DataFrame(sql_query)
     df['program_name'] = df['program_name'].replace(['2 Detox'], 'DTX')
     df['program_name'] = df['program_name'].replace(['4 Residential'], 'RES')
@@ -117,7 +117,7 @@ def return_graph_gender():
     # pandas func
     #df = pandas.read_csv(census_path)
     conn = psycopg2.connect(database=Database, user=USER, password=PASSWORD, host=HOST, port=PORT)
-    sql_query = pandas.read_sql_query('''SELECT * FROM census_info_beachhouse''', conn)
+    sql_query = pandas.read_sql_query('''SELECT sex FROM census_info_beachhouse''', conn)
     df = pandas.DataFrame(sql_query)
     df = df[['sex']]
     df = df.value_counts().rename_axis('Gender').reset_index(name='Count of Patients')
@@ -166,7 +166,7 @@ def return_graph_AGE():
     # pandas func
     #df = pandas.read_csv(census_path)
     conn = psycopg2.connect(database=Database, user=USER, password=PASSWORD, host=HOST, port=PORT)
-    sql_query = pandas.read_sql_query('''SELECT * FROM census_info_beachhouse''', conn)
+    sql_query = pandas.read_sql_query('''SELECT age FROM census_info_beachhouse''', conn)
     df = pandas.DataFrame(sql_query)
     df = df[['age']]
     df['age_groups'] = numpy.where(df['age'] <= 25, '18-25',
@@ -252,7 +252,7 @@ def return_graph_DOC():
     # pandas func
     #df = pandas.read_csv(census_path)
     conn = psycopg2.connect(database=Database, user=USER, password=PASSWORD, host=HOST, port=PORT)
-    sql_query = pandas.read_sql_query('''SELECT * FROM census_info_beachhouse''', conn)
+    sql_query = pandas.read_sql_query('''SELECT diagcodename_list FROM census_info_beachhouse''', conn)
     df = pandas.DataFrame(sql_query)
     df[['DOC', 'trash.1']] = df.diagcodename_list.str.split(' ', n=1, expand=True)
     df[['DOC', 'trash.1']] = df.DOC.str.split(',', n=1, expand=True)
