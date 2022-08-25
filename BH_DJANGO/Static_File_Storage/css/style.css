@@ -47,6 +47,19 @@ div.grid-template {
     padding: 10px 5px;
     font-size: 18px;
   }
+/* landing */
+
+div.census {margin-top: 50px;
+border-radius: 50px; height: 305px;
+  width: 600px; border-style: solid;
+  background-color:rgba(13, 110, 253, .8);}
+
+div.title_landing{ text-align: center; margin: 0 auto;
+margin-top: 20px;
+border-radius: 50px;
+width: 700px; border-style: solid;
+  background-color:rgba(13, 110, 253, .8);}
+
 
 /* Home */
 

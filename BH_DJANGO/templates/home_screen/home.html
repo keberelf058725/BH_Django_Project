@@ -3,66 +3,29 @@
 {% block content %}
 
 {% load static %}
-<html lang="en">
-<body class="home" style="background-image: url('{% static 'beach_img.jpg'%}');">
-<div>
-    <div class="grid-template">
-                <div id="filter_buttons" class="filter_buttons" style="grid-area: filter">
-            <p><a href="{% url 'home' %}" class="btn btn-primary">Recent Admits</a></p>
+<body class="home" style="background-image: url('{% static 'campus.jpg'%}');">
+<section>
+    <div class="title_landing">
+    <h1 style="text-align: center; color: white;">Welcome to Beach House Analytics</h1>
+    </div>
+</section>
+<section>
+<div style="margin-top: 50px;" class="grid-template">
+    <div id="filter_buttons" class="filter_buttons" style="grid-area: filter">
+        <p><a href="{% url 'recent_admissions' %}" class="btn btn-primary">Recent Admits</a></p>
         <p><a href="{% url 'loc' %}" class="btn btn-primary">Level of Care</a></p>
         <p><a href="{% url 'age' %}" class="btn btn-primary">Age</a></p>
         <p><a href="{% url 'gender' %}" class="btn btn-primary">Gender</a></p>
-       <p> <a href="{% url 'doc' %}" class="btn btn-primary">Drug of Choice</a></p>
-       <p> <a href="{% url 'caseload' %}" class="btn btn-primary">Caseload</a></p>
-        </div>
-        <div id="context" style="grid-area: context">
-            <div class="container">
-                <h2 class="text-center"><u>Beach House Main Analytics</u></h2><br>
-                <table class="table table-Default table-hover table-bordered table-sm">
-                    <form action="" method="post" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        <caption class="home_dl"><input name="recent_ad" class="btn btn-primary" type="submit" value="Download"> - Recent
-                            Admissions
-                        </caption>
-                        <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>MR</th>
-                            <th>Admit Date</th>
-                            <th>Level of Care</th>
-                            <th>Length Of Stay</th>
-                            <th>Age</th>
-                            <th>Gender</th>
-                            <th>Drug of Choice</th>
-                            <th>Therapist</th>
-                            <th>Payment Method</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <!-- jinja2 Technique -->
-                        {% if d %}
-                        {% for i in d %}
-                        <tr>
-                            <td>{{i.Name}}</td>
-                            <td>{{i.mr}}</td>
-                            <td>{{i.admission_date}}</td>
-                            <td>{{i.program_name}}</td>
-                            <td>{{i.length_of_stay}}</td>
-                            <td>{{i.age}}</td>
-                            <td>{{i.sex}}</td>
-                            <td>{{i.DOC}}</td>
-                            <td>{{i.Therapist}}</td>
-                            <td>{{i.paymentmethod}}</td>
-                        </tr>
-                        {% endfor %}
-                        {% endif %}
-                        </tbody>
-                    </form>
-                </table>
-            </div>
-        </div>
+        <p><a href="{% url 'doc' %}" class="btn btn-primary">Drug of Choice</a></p>
+        <p><a href="{% url 'caseload' %}" class="btn btn-primary">Caseload</a></p>
+    </div>
+    <div id="context" class="census" style="grid-area: context;">
+        <h2 style="color: white; margin-top: 45px;">Our Current Census this Morning</h2>
+        <div style="font-size: 100px; color: white;">{{census_total|safe}}</div>
     </div>
 </div>
+</section>
+<!---
+<section><a href="{% url 'home' %}" class="btn btn-primary">Take a tour?</a></section> -->
 </body>
-</html>
 {% endblock %}
