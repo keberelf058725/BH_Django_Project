@@ -133,6 +133,7 @@ def password_reset_request(request):
 def viv_help_view(request, *args, **kwargs):
     return render(request, "viv_help.html", {})
 
+@login_required
 def homepage_view(request, *args, **kwargs):
     conn = psycopg2.connect(database=Database, user=USER, password=PASSWORD, host=HOST, port=PORT)
     sql_query = pandas.read_sql_query('''SELECT mr FROM census_info_beachhouse''', conn)
